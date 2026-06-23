@@ -93,8 +93,8 @@
                     <li><b>Run a file</b>: <code>python zerionyx.py yourfile.zyx</code></li>
                     <li><b>Debug a file</b>: <code>python zerionyx.py -d yourfile.zyx</code></li>
                     <li><b>Open interactive shell</b>: <code>python zerionyx.py</code></li>
-                    <li>See the <a href="https://github.com/memeviber/Zerionyx"
-                            style="color:var(--neon-blue);">github repository</a> for more info</li>
+                    <li>See the <a href="https://github.com/memeviber/Zerionyx" style="color:var(--neon-blue);">github
+                            repository</a> for more info</li>
                 </ul>
             </section>
 
@@ -290,7 +290,8 @@ Zerionyx may be magical, but its syntax must be real.
                     <br>
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">if</span> <span class="zyx-func">type</span><span class="zyx-types">([</span><span class="zyx-number">1</span><span class="zyx-types">,</span> <span class="zyx-number">2</span><span class="zyx-types">])</span> <span class="zyx-types">==</span> <span class="zyx-var">list</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"It's a list!"</span><span class="zyx-types">)</span>
-<span class="zyx-keyword">done</span></code></pre>
+<span class="zyx-keyword">done</span>
+<span class="zyx-comment"># Output: It's a list!</span></code></pre>
                     <br>
                     <ul>
                         <li><b>list</b> &rarr; <code>"&lt;list&gt;"</code></li>
@@ -455,8 +456,8 @@ Zerionyx may be magical, but its syntax must be real.
 <span class="zyx-var">r</span> <span class="zyx-types">=</span> <span class="zyx-number">10</span>
 <span class="zyx-var">area</span> <span class="zyx-types">=</span> <span class="zyx-var">math_utils</span><span class="zyx-types">.</span><span class="zyx-func">circle_area</span><span class="zyx-types">(</span><span class="zyx-var">r</span><span class="zyx-types">)</span>
 
-<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"The area is "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">area</span><span class="zyx-types">))</span>
-<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Pi value: "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">math_utils</s<span class="zyxpan><span class="zyx-types">.</span><span class="zyx-var">pi</span><span class="zyx-types">))</span>
+<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"The area is "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">area</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: The area is 314.159</span>
+<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Pi value: "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">math_utils</s<span class="zyxpan><span class="zyx-types">.</span><span class="zyx-var">pi</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: Pi value: 3.14159</span>
 </code></pre>
                     <br>
                     <div class="note"
@@ -487,6 +488,7 @@ Zerionyx may be magical, but its syntax must be real.
 <span class="zyx-keyword">else</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Grade: C or lower"</span><span class="zyx-types">)</span>
 <span class="zyx-keyword">done</span>
+<span class="zyx-comment"># Output: Grade: B</span>
 </code></pre>
                 </section>
 
@@ -497,7 +499,8 @@ Zerionyx may be magical, but its syntax must be real.
                     <h4>While Loop</h4>
                     <p>Executes a code block if a condition is true.</p>
                     <br>
-                    <pre><code class="highlight-Zerionyx"><span class="zyx-var">count</span> <span class="zyx-types">=</span> <span class="zyx-number">0</span>
+                    <pre><code class="highlight-Zerionyx"><span class="zyx-comment"># Prints numbers from 0 to 4</span>
+<span class="zyx-var">count</span> <span class="zyx-types">=</span> <span class="zyx-number">0</span>
 <span class="zyx-keyword">while</span> <span class="zyx-var">count</span> <span class="zyx-types">&lt;</span> <span class="zyx-number">5</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">count</span><span class="zyx-types">)</span>
     <span class="zyx-var">count</span> <span class="zyx-types">=</span> <span class="zyx-var">count</span> <span class="zyx-types">+</span> <span class="zyx-number">1</span>
@@ -531,6 +534,10 @@ Zerionyx may be magical, but its syntax must be real.
 <span class="zyx-keyword">for</span> <span class="zyx-var">fruit</span> <span class="zyx-keyword">in</span> <span class="zyx-var">fruits</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"I like "</span> <span class="zyx-types">+</span> <span class="zyx-var">fruit</span><span class="zyx-types">)</span>
 <span class="zyx-keyword">done</span>
+<span class="zyx-comment"># Output:</span>
+<span class="zyx-comment"># I like apple</span>
+<span class="zyx-comment"># I like banana</span>
+<span class="zyx-comment"># I like banana</span>
 </code></pre>
                     <br>
                     <p>The <code>break</code> statement can be used to exit a loop immediately, and
@@ -586,7 +593,7 @@ Zerionyx may be magical, but its syntax must be real.
 </code></pre>
                 </section>
                 <section id="ref-using">
-                    <h3>The <code>using</code> Statement: Accessing Global Scope</h3>
+                    <h3>Using & Using Parent </h3>
                     <p>
                         The <code>using</code> statement is used to explicitly bind a variable reference to the
                         <strong>global scope</strong> rather than creating a new local variable. This allows a function
@@ -594,7 +601,7 @@ Zerionyx may be magical, but its syntax must be real.
                     </p>
                     <br>
 
-                    <h4><code>using <variable></code>: The <code>global</code> Analogy</h4>
+                    <h4><code>using<variable></code>: The <code>global</code> Analogy</h4>
                     <p>
                         When you need a function to modify a variable that exists in the global scope (or a specific
                         top-level namespace), <code>using</code> creates a direct, writable link to that original
@@ -799,9 +806,9 @@ Zerionyx may be magical, but its syntax must be real.
 <span class="zyx-var">users</span><span class="zyx-types">$</span><span class="zyx-number">0</span><span class="zyx-types">$</span><span class="zyx-string">"name"</span> <span class="zyx-types">=</span> <span class="zyx-string">"user-1"</span>
 <span class="zyx-var">users</span><span class="zyx-types">$</span><span class="zyx-number">0</span><span class="zyx-types">$</span><span class="zyx-string">"password"</span> <span class="zyx-types">=</span> <span class="zyx-string">"123456"</span>
 
-<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">)</span>
-<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">$</span><span class="zyx-number">0</span><span class="zyx-types">$</span><span class="zyx-string">"name"</span><span class="zyx-types">)</span>
-<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">$</span><span class="zyx-number">0</span><span class="zyx-types">$</span><span class="zyx-string">"password"</span><span class="zyx-types">)</span>
+<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: [{'name': 'user-1', 'password': '123456'}]</span>
+<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">$</span><span class="zyx-number">0</span><span class="zyx-types">$</span><span class="zyx-string">"name"</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: user-1</span>
+<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">$</span><span class="zyx-number">0</span><span class="zyx-types">$</span><span class="zyx-string">"password"</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: 123456</span>
 </code></pre>
                 </section>
 
@@ -819,7 +826,7 @@ Zerionyx may be magical, but its syntax must be real.
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"libs.hash"</span>
 <span class="zyx-var">data</span> <span class="zyx-types">=</span> <span class="zyx-func">to_bytes</span><span class="zyx-types">(</span><span class="zyx-string">"my secret data"</span><span class="zyx-types">)</span>
 <span class="zyx-var">hashed_data</span> <span class="zyx-types">=</span> <span class="zyx-var">hash</span><span class="zyx-types">.</span><span class="zyx-func">sha256</span><span class="zyx-types">(</span><span class="zyx-var">data</span><span class="zyx-types">)</span>
-<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">hashed_data</span><span class="zyx-types">)</span>
+<span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">hashed_data</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: 323665373063323064...</span>
 </code></pre>
                 </section>
 
@@ -1016,7 +1023,7 @@ Zerionyx may be magical, but its syntax must be real.
                     </ul>
                 </div>
                 <div id="lib-ffio">
-                    <h3>ffio.zyx</h3>
+                    <h3>ffio.zyx (File Folder I/O)</h3>
                     <ul>
                         <li><b>write(file, mode, text)</b> &rarr; none &mdash; Write <code>text</code> to
                             <code>file</code> with
@@ -1171,7 +1178,7 @@ Zerionyx may be magical, but its syntax must be real.
                         <li><b>time()</b> &rarr; number (float) &mdash; Current time (seconds since epoch)</li>
                         <li><b>ctime(time)</b> &rarr; str &mdash; Human-readable time string</li>
                     </ul>
-                    <h4>datetime Namespace</h4>
+                    <h4>Datetime Namespace (<code>time.datetime</code>)</h4>
                     <p>A namespace for working with date and time objects.</p>
                     <ul>
                         <li><b>now()</b> &rarr; str &mdash; Returns the current local date and time</li>
@@ -1328,8 +1335,7 @@ Zerionyx may be magical, but its syntax must be real.
 
     <footer>
         <div class="container">
-            Zerionyx © 2025 MemeViber &mdash; <a href="https://github.com/memeviber/Zerionyx"
-                target="_blank">View on
+            Zerionyx © 2025 MemeViber &mdash; <a href="https://github.com/memeviber/Zerionyx" target="_blank">View on
                 GitHub</a>
         </div>
     </footer>
