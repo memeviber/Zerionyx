@@ -30,7 +30,7 @@ from .errors import Error, IError, MError, RTError, TError, get_line_from_text
 from .lexer import Lexer
 from .nodes import *
 from .parser import *
-from .utils import RTResult, Position
+from .utils import Position, RTResult
 
 init()
 ssl._create_default_https_context = ssl._create_unverified_context

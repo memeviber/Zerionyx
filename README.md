@@ -193,7 +193,13 @@ python -m pip install -r requirements.txt
 python zerionyx.py tests/test.zyx
 ```
 
-### 4. Launch interactive shell
+### 4. Debug a Zerionyx script
+
+```bash
+python zerionyx.py -d tests/test.zyx
+```
+
+### 5. Launch interactive shell
 
 ```bash
 python zerionyx.py

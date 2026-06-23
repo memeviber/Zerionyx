@@ -1,3 +1,4 @@
+import argparse
 import atexit
 import io
 import os
@@ -336,14 +337,93 @@ def check_file_comments_or_empty(file_path):
 
 
 def main():
-    debug_mode = False
-    if "--debug" in sys.argv:
-        debug_mode = True
-        sys.argv.remove("--debug")
-    elif "-d" in sys.argv:
-        debug_mode = True
-        sys.argv.remove("-d")
-    if len(sys.argv) == 1:
+    parser = argparse.ArgumentParser(description="Zerionyx Interpreter")
+    parser.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
+    parser.add_argument(
+        "--version",
+        "-v",
+        action="store_true",
+        help="Show version information and exit",
+    )
+    parser.add_argument(
+        "--pack",
+        "-p",
+        nargs="+",
+        metavar=("OUTPUT", "MAIN_SCRIPT", "OTHER_FILES"),
+        help="Pack scripts into a .zex file",
+    )
+    parser.add_argument("file", nargs="?", help="The .zyx or .zex file to execute")
+
+    args = parser.parse_args()
+    debug_mode = args.debug
+
+    if args.version:
+        print(f"Zerionyx {INFO}")
+        return
+
+    if args.pack is not None:
+        if len(args.pack) < 2:
+            print(
+                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Usage{Fore.RESET}{Style.RESET_ALL}: {os.path.basename(sys.argv[0])} --pack <output.zex> <main_script.zyx> [other_files...]"
+            )
+            return
+        output_file = args.pack[0]
+        main_script = args.pack[1]
+        other_files = args.pack[2:]
+        pack_zex(output_file, main_script, other_files)
+        return
+
+    if args.file:
+        file_name = os.path.abspath(args.file)
+
+        if not file_name.endswith((".zyx", ".zex")):
+            print(
+                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}The file must have a '.zyx' or '.zex' extension{Fore.RESET}{Style.RESET_ALL}"
+            )
+            return
+
+        if not os.path.isfile(file_name) or not os.path.exists(file_name):
+            print(
+                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}File '{os.path.abspath(file_name)}' does not exist{Fore.RESET}{Style.RESET_ALL}"
+            )
+            return
+
+        if file_name.endswith(".zex"):
+            run_zex(file_name)
+            return
+
+        try:
+            check_file_comments_or_empty(file_name)
+            with open(file_name, "r", encoding="utf-8") as file:
+                text = file.read()
+            text = text.splitlines()
+            for i in range(len(text)):
+                text[i] = text[i].strip()
+            result, error = run(file_name, "\n".join(text), debug_mode=debug_mode)
+            if error:
+                if hasattr(error, "as_string"):
+                    print(f"{error.as_string()}")
+                else:
+                    print(f"{error}")
+                sys.exit(1)
+            elif result:
+                if len(result.value) == 1:
+                    print(f"{repr(result.value[0])}")
+                else:
+                    print(f"{repr(result)}")
+        except IOError as e:
+            print(
+                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}{e}{Fore.RESET}"
+            )
+        except Exception as e:
+            import traceback
+
+            traceback.print_exc()
+            print(
+                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Interpreter Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}{e}{Fore.RESET}"
+            )
+            return
+    else:
         print(f"Zerionyx {INFO}")
         print(
             "Type 'grammar', 'copyright', 'credits', 'license', 'docs' for more information or 'exit' to exit."
@@ -411,73 +491,6 @@ def main():
             print(
                 f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Interpreter Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}{e}{Fore.RESET}"
             )
-    elif len(sys.argv) > 1 and sys.argv[1] == "--pack":
-        if len(sys.argv) < 4:
-            print(
-                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Usage{Fore.RESET}{Style.RESET_ALL}: {os.path.basename(sys.argv[0])} --pack <output.zex> <main_script.zyx> [other_files...]"
-            )
-            return
-        output_file = sys.argv[2]
-        main_script = sys.argv[3]
-        try:
-            other_files = sys.argv[4:]
-        except IndexError:
-            other_files = []
-        pack_zex(output_file, main_script, other_files)
-        return
-    elif len(sys.argv) == 2 and sys.argv[1] == "--version":
-        print(f"Zerionyx {INFO}")
-        return
-    else:
-        file_name = os.path.abspath(sys.argv[1])
-
-        if not file_name.endswith((".zyx", ".zex")):
-            print(
-                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}The file must have a '.zyx' or '.zex' extension{Fore.RESET}{Style.RESET_ALL}"
-            )
-            return
-
-        if not os.path.isfile(file_name) or not os.path.exists(file_name):
-            print(
-                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}File '{os.path.abspath(file_name)}' does not exist{Fore.RESET}{Style.RESET_ALL}"
-            )
-            return
-
-        if file_name.endswith(".zex"):
-            run_zex(file_name)
-            return
-
-        try:
-            check_file_comments_or_empty(file_name)
-            with open(file_name, "r", encoding="utf-8") as file:
-                text = file.read()
-            text = text.splitlines()
-            for i in range(len(text)):
-                text[i] = text[i].strip()
-            result, error = run(file_name, "\n".join(text), debug_mode=debug_mode)
-            if error:
-                if hasattr(error, "as_string"):
-                    print(f"{error.as_string()}")
-                else:
-                    print(f"{error}")
-                sys.exit(1)
-            elif result:
-                if len(result.value) == 1:
-                    print(f"{repr(result.value[0])}")
-                else:
-                    print(f"{repr(result)}")
-        except IOError as e:
-            print(
-                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}{e}{Fore.RESET}"
-            )
-        except Exception as e:
-            import traceback
-
-            traceback.print_exc()
-            print(
-                f"{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}Interpreter Error{Fore.RESET}{Style.RESET_ALL}: {Fore.MAGENTA}{e}{Fore.RESET}"
-            )
-            return
 
 
 if __name__ == "__main__":

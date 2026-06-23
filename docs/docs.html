@@ -91,6 +91,7 @@
                     <li><b>Install Zerionyx</b>: <code>git clone https://github.com/memeviber/Zerionyx</code>
                     </li>
                     <li><b>Run a file</b>: <code>python zerionyx.py yourfile.zyx</code></li>
+                    <li><b>Debug a file</b>: <code>python zerionyx.py -d yourfile.zyx</code></li>
                     <li><b>Open interactive shell</b>: <code>python zerionyx.py</code></li>
                     <li>See the <a href="https://github.com/memeviber/Zerionyx"
                             style="color:var(--neon-blue);">github repository</a> for more info</li>
@@ -354,6 +355,9 @@ Zerionyx may be magical, but its syntax must be real.
                         <li><b>is_thread_pool(x)</b> &rarr; bool &mdash; Check if <code>x</code> is thread pool</li>
                         <li><b>is_future(x)</b> &rarr; bool &mdash; Check if <code>x</code> is future</li>
                         <li><b>is_namespace(x)</b> &rarr; bool &mdash; Check if <code>x</code> is namespace</li>
+                        <li><b>is_nan(n)</b> &rarr; bool &mdash; Check if <code>n</code> is NaN (Not a Number)</li>
+                        <li><b>is_channel(n)</b> &rarr; bool &mdash; Check if <code>n</code> is channel</li>
+                        <li><b>is_cfloat(n)</b> &rarr; bool &mdash; Check if <code>n</code> is cfloat</li>
                         <li><b>keys(hm)</b> &rarr; list &mdash; Return list of all keys in <code>hm</code> (a hashmap)
                         </li>
                         <li><b>values(hm)</b> &rarr; list &mdash; Return list of all values in <code>hm</code></li>
@@ -412,9 +416,6 @@ Zerionyx may be magical, but its syntax must be real.
                             list/string/hashmap/bytes
                             <code>l</code> from <code>from</code> to <code>to</code> step <code>step</code> (exclusive)
                         </li>
-                        <li><b>is_nan(n)</b> &rarr; bool &mdash; Check if <code>n</code> is NaN (Not a Number)</li>
-                        <li><b>is_channel(n)</b> &rarr; bool &mdash; Check if <code>n</code> is channel</li>
-                        <li><b>is_cfloat(n)</b> &rarr; bool &mdash; Check if <code>n</code> is cfloat</li>
                         <li><b>clone(value)</b> &rarr; any &mdash; Clone and return <code>value</code></li>
                         <li><b>get_member(namespace, member, default=none)</b> &rarr; any &mdash; Gets a member from a
                             <code>namespace</code>, returning <code>default</code> if it does not exist
@@ -848,10 +849,10 @@ Zerionyx may be magical, but its syntax must be real.
                     </p>
 
                     <h4>Packing</h4>
-                    <p>Use the <code>--pack</code> flag to create a <b>.zex</b> file from a main script and related
+                    <p>Use the <code>-p</code> flag to create a <b>.zex</b> file from a main script and related
                         files:</p>
                     <br>
-                    <pre><code class="highlight-Zerionyx">python zerionyx.py --pack <span class="zyx-string">output.zex</span> <span class="zyx-var">main.zyx</span> <span class="zyx-comment">file1.txt file2.zyx</span></code></pre>
+                    <pre><code class="highlight-Zerionyx">python zerionyx.py -p <span class="zyx-string">output.zex</span> <span class="zyx-var">main.zyx</span> <span class="zyx-comment">file1.txt file2.zyx</span></code></pre>
                     <br>
                     <h4>Running</h4>
                     <p>You can execute a <b>.zex</b> file just like a regular <b>.zyx</b> file:</p>
@@ -976,11 +977,11 @@ Zerionyx may be magical, but its syntax must be real.
                         </li>
                         <li><b>startswith(s, v)</b> &rarr; bool &mdash; <code>s</code> starts with <code>v</code></li>
                         <li><b>endswith(s, v)</b> &rarr; bool &mdash; <code>s</code> ends with <code>v</code></li>
-                        <li><b>encode(s, encoding="utf-8", errors="strict")</b> &rarr; <code>bytes</code> &mdash; Encode
+                        <li><b>encode(s, encoding="utf-8", errors="strict")</b> &rarr; bytes &mdash; Encode
                             <code>s</code> using
                             <code>encoding</code>
                         </li>
-                        <li><b>decode(b, encoding="utf-8", errors="strict")</b> &rarr; <code>string</code> &mdash;
+                        <li><b>decode(b, encoding="utf-8", errors="strict")</b> &rarr; str &mdash;
                             Decode <code>b</code> using
                             <code>encoding</code>
                         </li>

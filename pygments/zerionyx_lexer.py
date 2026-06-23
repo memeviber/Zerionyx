@@ -1,13 +1,13 @@
 from pygments.lexer import RegexLexer, bygroups, words
 from pygments.token import (
-    Text,
     Comment,
-    Operator,
     Keyword,
     Name,
-    String,
     Number,
+    Operator,
     Punctuation,
+    String,
+    Text,
 )
 
 
