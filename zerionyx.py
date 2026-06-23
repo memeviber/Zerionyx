@@ -349,7 +349,7 @@ def main():
         "--pack",
         "-p",
         nargs="+",
-        metavar=("OUTPUT", "MAIN_SCRIPT", "OTHER_FILES"),
+        metavar=("OUTPUT", "SCRIPT"),
         help="Pack scripts into a .zex file",
     )
     parser.add_argument("file", nargs="?", help="The .zyx or .zex file to execute")

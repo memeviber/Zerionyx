@@ -4867,11 +4867,13 @@ class Interpreter:
                     self.visit_table[node_type] = method
 
     def get_node_pos(self, node):
-        if not isinstance(node, tuple):
-            return None
-        for item in reversed(node):
-            if isinstance(item, Position):
-                return item
+        if hasattr(node, "pos_start"):
+            return node.pos_start
+
+        if isinstance(node, tuple):
+            for item in reversed(node):
+                if isinstance(item, Position):
+                    return item
         return None
 
     def get_context_depth(self, context):
