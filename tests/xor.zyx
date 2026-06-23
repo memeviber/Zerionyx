@@ -25,4 +25,3 @@ for i in decrypted do
     print(string.chr(i))
 done
 print("\n")
-

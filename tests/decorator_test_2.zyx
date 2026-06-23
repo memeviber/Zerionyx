@@ -36,4 +36,3 @@ println(might_fail())
 defun risky(a, b) -> a / b
 println("Result of risky function: " + to_str(risky(4, 2)))
 println("Result of risky function: " + to_str(risky(1, 0)))
-
