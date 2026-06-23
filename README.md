@@ -5,8 +5,6 @@
     <img src="https://img.shields.io/badge/python-3.11%2B-00ffcc?style=for-the-badge&logo=python" alt="Python 3.11+" />
     <img src="https://img.shields.io/badge/Zerionyx-5.0.5-00ffcc?style=for-the-badge&logo=lightning" alt="Zerionyx-5.0.5" />
     <img src="https://img.shields.io/badge/build-passing-00ffcc?style=for-the-badge&logo=githubactions" alt="Build Status" />
-    <img src="https://img.shields.io/github/contributors/memeviber/Zerionyx?style=for-the-badge&color=00ffcc">
-    <img src="https://img.shields.io/github/stars/memeviber/Zerionyx?style=for-the-badge&color=00ffcc">
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-00ffcc?style=for-the-badge&logo=Open%20Source%20Initiative" alt="License" /></a>
   </p>
 </p>
