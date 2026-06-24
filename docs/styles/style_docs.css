@@ -1,15 +1,34 @@
+/* ==========================================================================
+   SYSTEM DESIGN SYSTEM (Refactored for Zyx & Modern Tech Style)
+   Inspired by Rust & Python Official Websites
+   ========================================================================== */
+
 :root {
-    --neon-blue-dark: #069ec4;
-    --neon-blue: #1ad1ff;
-    --neon-green-accent: #1affb3;
-    --light-bg: #ffffff;
-    --dark-header-bg: #2b3b4a;
-    --dark-code-bg: #101522;
-    --sidebar-bg: #f9f9f9;
-    --dark-text: #333333;
-    --light-text: #f0f0f0;
+    /* Brand Colors (Zyx Deep Blue & Flat Accents) */
+    --zyx-blue-dark: #1e3a8a;      /* Deep Slate Blue - Professional & Solid */
+    --zyx-blue: #3b82f6;           /* Electric/Tech Blue */
+    --zyx-blue-light: #60a5fa;     /* Soft Sky Blue for accents */
+    --accent-teal: #0ea5e9;        /* Teal for functions */
+    
+    /* Backgrounds & Panels (Slate Scale - Modern Matte Dark) */
+    --light-bg: #f8fafc;           /* Slate 50 (Very clean off-white) */
+    --sidebar-bg: #f1f5f9;         /* Slate 100 */
+    --dark-header-bg: #0f172a;     /* Slate 900 (Elegant Dark Navy) */
+    --dark-code-bg: #1e293b;       /* Slate 800 (Clean matte gray-dark) */
+    
+    /* Borders & Muted Elements */
+    --border-color: #e2e8f0;       /* Slate 200 */
+    --border-code: #334155;        /* Slate 700 */
+    --muted-text: #64748b;         /* Slate 500 */
+    
+    /* Typography Colors */
+    --dark-text: #1e293b;          /* Slate 800 (Softer than pure black) */
+    --light-text: #f8fafc;         /* Slate 50 */
 }
 
+/* ==========================================================================
+   RESET & BASE STYLES
+   ========================================================================== */
 *,
 *::before,
 *::after {
@@ -18,53 +37,55 @@
     padding: 0;
 }
 
-ul,
-ol {
-    list-style-position: outside;
-    list-style-type: disc;
-    padding-left: 1.25rem;
-    margin: 0 0 1rem 0;
-}
-
 html {
     scroll-behavior: smooth;
 }
 
 body {
-    font-family: 'Source Sans Pro', 'Segoe UI', Arial, sans-serif;
-    margin: 0;
+    font-family: 'Source Sans Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
     background-color: var(--light-bg);
     color: var(--dark-text);
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
-    max-width: 960px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
+ul,
+ol {
+    list-style-position: outside;
+    padding-left: 1.5rem;
+    margin: 0 0 1.25rem 0;
+}
+
+li {
+    margin-bottom: 0.4rem;
+}
+
+/* ==========================================================================
+   HEADER & NAVIGATION
+   ========================================================================== */
 header {
     position: sticky;
     top: 0;
     left: 0;
     right: 0;
     background: var(--dark-header-bg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 100;
 }
 
 .header-inner {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem 20px;
-}
-
-.header-container {
-    max-width: none;
-    margin: 0;
-    padding: 0;
+    align-items: center;
+    padding: 0.9rem 24px;
 }
 
 .logo {
@@ -74,51 +95,33 @@ header {
 }
 
 .logo img {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
 }
 
 .logo a {
-    font-size: 1.8rem;
-    font-weight: bold;
+    font-size: 1.6rem;
+    font-weight: 700;
     color: var(--light-text);
     text-decoration: none;
-    text-shadow: 0 0 5px var(--neon-blue);
+    letter-spacing: -0.03em;
 }
 
 .logo span {
-    color: var(--neon-blue);
-    text-shadow: 0 0 8px var(--neon-blue);
+    color: var(--zyx-blue-light);
 }
 
 nav a {
-    color: var(--light-text);
+    color: #cbd5e1; /* Slate 300 */
     text-decoration: none;
-    margin-left: 25px;
-    font-size: 1.1rem;
-    transition: color 0.2s, text-shadow 0.2s;
+    margin-left: 28px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
 }
 
 nav a:hover {
-    color: var(--neon-blue);
-    text-shadow: 0 0 5px var(--neon-blue);
-}
-
-.hero {
-    text-align: center;
-    padding: 4rem 20px;
-}
-
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    font-weight: 300;
-}
-
-.hero p {
-    font-size: 1.3rem;
-    color: var(--muted-text);
-    margin-bottom: 2.5rem;
+    color: var(--light-text);
 }
 
 .nav-toggle {
@@ -128,34 +131,71 @@ nav a:hover {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
 }
 
+/* ==========================================================================
+   HERO SECTION
+   ========================================================================== */
+.hero {
+    text-align: center;
+    padding: 5rem 24px;
+    background: linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.hero h1 {
+    font-size: 3.2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 800;
+    color: var(--dark-header-bg);
+    letter-spacing: -0.04em;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    color: var(--muted-text);
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+
+/* ==========================================================================
+   DOCUMENTATION LAYOUT & SIDEBAR
+   ========================================================================== */
 .docs-wrapper {
     display: flex;
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 0 auto;
+    padding: 0 24px;
 }
 
 .sidebar {
     width: 260px;
     flex-shrink: 0;
-    padding: 2rem 1rem;
-    border-right: 1px solid #e0e0e0;
+    padding: 2.5rem 1.5rem 2.5rem 0;
+    border-right: 1px solid var(--border-color);
     position: sticky;
-    top: 68px;
-    height: calc(100vh - 68px);
+    top: 66px;
+    height: calc(100vh - 66px);
     overflow-y: auto;
-    background: var(--sidebar-bg);
+}
+
+/* Custom Scrollbar for Sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 
 .sidebar h3 {
-    font-size: 1rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
-    color: #777;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 0.5rem;
-    margin-top: 1.5rem;
+    color: var(--muted-text);
+    letter-spacing: 0.08em;
+    margin-top: 1.8rem;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
 }
 
 .sidebar h3:first-child {
@@ -165,143 +205,206 @@ nav a:hover {
 .sidebar ul {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 1rem 0;
+}
+
+.sidebar li {
+    margin-bottom: 0.2rem;
 }
 
 .sidebar li a {
     display: block;
-    padding: 0.4rem 0.5rem;
-    color: var(--neon-blue-dark);
+    padding: 0.4rem 0.6rem;
+    color: #475569; /* Slate 600 */
     text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.2s;
-    font-weight: bold;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border-left: 2px solid transparent;
+    transition: all 0.15s ease;
 }
 
 .sidebar li a:hover {
-    background-color: #e0e0e0;
-    text-shadow: 0 0 4px var(--neon-blue-dark);
+    color: var(--zyx-blue-dark);
+    background-color: #e2e8f0;
+    border-left-color: var(--zyx-blue);
+    padding-left: 0.8rem;
 }
 
+/* ==========================================================================
+   MAIN CONTENT AREA
+   ========================================================================== */
 .main-content {
     flex-grow: 1;
-    padding: 2rem 3rem;
+    padding: 2.5rem 0 4rem 3.5rem;
+    min-width: 0; /* Prevents flex items from breaking layout on overflow */
 }
 
 .main-content h1 {
-    font-size: 2.5rem;
-    font-weight: 300;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.5rem;
-    margin-top: 0;
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--dark-header-bg);
+    letter-spacing: -0.03em;
+    padding-bottom: 0.8rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .main-content h2 {
     font-size: 1.8rem;
-    font-weight: 400;
-    margin-top: 3rem;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 0.5rem;
-    color: var(--neon-blue-dark);
-    text-shadow: 0 0 3px var(--neon-blue-dark);
+    font-weight: 700;
+    margin-top: 3.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--zyx-blue-dark);
 }
 
 .main-content h3 {
-    font-size: 1.4rem;
-    font-weight: 400;
+    font-size: 1.3rem;
+    font-weight: 600;
     margin-top: 2.5rem;
-    color: var(--neon-blue-dark);
+    margin-bottom: 0.75rem;
+    color: #0f172a;
 }
 
+.main-content p {
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+    color: #334155; /* Slate 700 */
+}
+
+/* Note Callout (Rust style note box) */
+.note {
+    border-left: 4px solid var(--zyx-blue) !important;
+    padding: 1rem 1.25rem !important;
+    background: #eff6ff !important; /* Soft blue tint */
+    border-radius: 0 6px 6px 0;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    color: #1e3a8a;
+}
+
+.note strong {
+    color: var(--zyx-blue-dark);
+}
+
+/* ==========================================================================
+   CODE & SYNTAX HIGHLIGHTING (VS Code Matte Theme style)
+   ========================================================================== */
 pre {
     background-color: var(--dark-code-bg);
-    border: 1px solid var(--neon-blue);
-    box-shadow: 0 0 10px var(--neon-blue);
-    border-radius: 5px;
-    padding: 1rem;
+    border: 1px solid var(--border-code);
+    border-radius: 6px;
+    padding: 1.2rem;
     overflow-x: auto;
     max-width: 100%;
-    line-height: 1.45;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); /* Clean soft shadow */
 }
 
 code {
-    font-family: 'Fira Mono', 'Consolas', monospace;
-    background-color: #1ad1ff1a;
-    color: #0d4b5f;
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-size: 0.9em;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow-wrap: anywhere;
-    word-break: break-all;
+    font-family: 'Fira Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+    background-color: #f1f5f9; /* Matte light gray */
+    color: #e11d48; /* Flat rose red for text inline code (Rust style) */
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 500;
 }
 
-pre>code {
-    color: #e6faff;
+pre > code {
+    color: #f8fafc;
     background: none;
     padding: 0;
     border-radius: 0;
-    font-size: 1em;
+    font-size: 0.95rem;
+    font-weight: 400;
+    white-space: pre;
     text-shadow: none;
 }
 
-footer {
-    background-color: var(--dark-header-bg);
-    color: #ccc;
-    text-align: center;
-    padding: 2rem 0;
-    font-size: 0.9rem;
-    margin-top: 4rem;
-}
-
-footer a {
-    color: var(--neon-blue);
-    text-shadow: 0 0 3px var(--neon-blue);
-}
-
+/* Zyx Highlighter Palette (Pastel/VS Code style) */
 .highlight-Zerionyx .zyx-keyword,
 .highlight-Zerionyx .zyx-types {
-    color: var(--neon-blue);
-    font-weight: bold;
+    color: #f97316; /* Rust Orange */
+    font-weight: 600;
 }
 
 .highlight-Zerionyx .zyx-func-def,
 .highlight-Zerionyx .zyx-func {
-    color: var(--neon-green-accent);
-    font-weight: bold;
+    color: #38bdf8; /* Soft blue */
+    font-weight: 600;
 }
 
 .highlight-Zerionyx .zyx-string {
-    color: #e2fb8c;
+    color: #86efac; /* Elegant Soft Green */
 }
 
 .highlight-Zerionyx .zyx-number {
-    color: #ffb366;
+    color: #fca5a5; /* Pastel soft pink/coral */
 }
 
 .highlight-Zerionyx .zyx-comment {
-    color: #667788;
+    color: #64748b; /* Soft Muted Slate */
     font-style: italic;
 }
 
 .highlight-Zerionyx .zyx-var {
-    color: #e6faff;
+    color: #f1f5f9; /* Slate 100 */
 }
 
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+footer {
+    background-color: var(--dark-header-bg);
+    color: #94a3b8; /* Slate 400 */
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 0.9rem;
+    margin-top: 6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+footer a {
+    color: var(--zyx-blue-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+
+footer a:hover {
+    color: var(--light-text);
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES (Highly optimized breakpoints)
+   ========================================================================== */
+
+/* Mobile Devices */
 @media (max-width: 768px) {
     .header-inner {
         flex-wrap: wrap;
-        justify-content: center;
-        padding: 0.8rem 15px;
+        padding: 0.8rem 16px;
+    }
+
+    .logo {
+        flex-grow: 1;
+    }
+
+    .nav-toggle {
+        display: block;
     }
 
     nav {
         width: 100%;
-        margin-top: 1rem;
+        margin-top: 0.8rem;
         display: none;
         flex-direction: column;
         text-align: center;
+        background: #1e293b;
+        border-radius: 8px;
+        padding: 0.5rem 0;
     }
 
     nav.active {
@@ -309,27 +412,26 @@ footer a {
     }
 
     nav a {
-        margin: 10px 0;
+        margin: 8px 0;
         padding: 8px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     nav a:last-child {
         border-bottom: none;
     }
 
-    .nav-toggle {
-        display: block;
-        order: 1;
+    .hero {
+        padding: 3.5rem 16px;
     }
 
-    .logo {
-        flex-grow: 1;
-        justify-content: flex-start;
+    .hero h1 {
+        font-size: 2.4rem;
     }
 
     .docs-wrapper {
         flex-direction: column;
+        padding: 0 16px;
     }
 
     .sidebar {
@@ -338,12 +440,12 @@ footer a {
         width: 100%;
         height: auto;
         border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-        padding: 1.5rem 1rem;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem 0;
     }
 
     .main-content {
-        padding: 1.5rem 1rem;
+        padding: 2rem 0;
     }
 
     .main-content h1 {
@@ -351,57 +453,33 @@ footer a {
     }
 
     .main-content h2 {
-        font-size: 1.6rem;
-        margin-top: 2rem;
-    }
-
-    .main-content h3 {
-        font-size: 1.2rem;
-        margin-top: 1.5rem;
-    }
-
-    footer {
-        padding: 1.5rem 1rem;
+        font-size: 1.5rem;
     }
 }
 
+/* Tablet Devices */
 @media (min-width: 769px) and (max-width: 1024px) {
-    .header-inner {
-        padding: 0.8rem 20px;
-    }
-
     .docs-wrapper {
-        padding: 0 15px;
+        padding: 0 20px;
     }
 
     .sidebar {
-        width: 200px;
-        padding: 1.5rem 0.8rem;
+        width: 210px;
+        padding: 2rem 1rem 2rem 0;
     }
 
     .main-content {
-        padding: 2rem 2rem;
-    }
-
-    .main-content h1 {
-        font-size: 2.2rem;
-    }
-
-    .main-content h2 {
-        font-size: 1.7rem;
-    }
-
-    .main-content h3 {
-        font-size: 1.3rem;
+        padding: 2rem 0 3rem 2.5rem;
     }
 }
 
+/* Desktops and beyond */
 @media (min-width: 1025px) {
     .sidebar {
-        width: 250px;
+        width: 260px;
     }
 
     .main-content {
-        padding: 3rem 3rem;
+        padding: 2.5rem 0 4rem 4rem;
     }
 }
