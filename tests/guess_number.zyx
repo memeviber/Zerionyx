@@ -6,6 +6,7 @@ ma = 10
 sn = 0
 
 defun handle_input(m, m_)
+    using a
     i = to_int(input("Enter a number from " + to_str(m) + " to " + to_str(m_) + ": "), true)
     while i == none or (i < m or i > m_) do
         a += 1
@@ -20,7 +21,7 @@ defun handle_input(m, m_)
 done
 
 defun guess_number(m, m_)
-    using sn
+    using sn, a
     a = 0
     sn = random.rand_int(m, m_)
     while a < ma do
