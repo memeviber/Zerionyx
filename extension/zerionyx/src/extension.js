@@ -1,23 +1,34 @@
 const vscode = require('vscode');
+const fs = require('fs');
+const path = require('path');
 
 const zerionyxKeywords = [
-    'load', 'namespace', 'done', 'defun', 'using', 'if', 'elif', 'else', 'do', 'for', 'to', 'step', 'in', 'while'
+    'load', 'namespace', 'done', 'defun', 'using', 'parent',
+    'if', 'elif', 'else', 'do', 'for', 'to', 'step', 'in', 'while', 'del'
 ];
-
 const zerionyxControlFlow = ['return', 'continue', 'break'];
 const zerionyxOperators = ['and', 'or', 'not'];
-const zerionyxConstants = ['true', 'false', 'none', 'nan', 'inf', 'neg_inf', 'is_main'];
-const zerionyxTypeConstants = ['list', 'str', 'int', 'float', 'bool', 'func', 'hashmap', 'thread', 'bytes', 'cfloat', 'py_obj', 'channel_type', 'none_type', 'thread_pool_type', 'future_type'];
+const zerionyxConstants = ['true', 'false', 'none', 'nan', 'inf', 'neg_inf', 'is_main', 'PI', 'E', 'ln2'];
+const zerionyxTypeConstants = [
+    'list', 'str', 'int', 'float', 'bool', 'func', 'hashmap', 'thread',
+    'bytes', 'cfloat', 'py_obj', 'namespace', 'channel_type', 'none_type',
+    'thread_pool_type', 'future_type'
+];
 
 const zerionyxBuiltins = [
-    'append', 'is_panic', 'clear', 'extend', 'input', 'get_password', 'insert', 'is_func', 'is_list', 'is_py_obj', 'is_none', 'is_num',
-    'is_str', 'is_bool', 'is_thread', 'is_thread_pool', 'is_future', 'is_namespace', 'keys', 'values', 'items', 'has', 'get', 'del_key',
-    'len', 'panic', 'pop', 'print', 'println', 'to_float', 'to_int', 'to_str', 'to_cfloat', 'to_bytes', 'type', 'pyexec', 'slice', 'clone',
-    'is_nan', 'is_channel', 'is_cfloat', 'shl', 'shr', 'bitwise_and', 'bitwise_or', 'bitwise_xor', 'bitwise_not', 'get_member'
+    'println', 'print', 'input', 'get_password', 'clear', 'type', 'is_none',
+    'is_num', 'is_bool', 'is_str', 'is_list', 'is_func', 'is_thread',
+    'is_thread_pool', 'is_future', 'is_namespace', 'is_channel', 'is_cfloat',
+    'is_py_obj', 'is_nan', 'is_panic', 'len', 'panic', 'pop', 'append',
+    'insert', 'extend', 'slice', 'to_str', 'to_int', 'to_float', 'to_cfloat',
+    'to_bytes', 'pyexec', 'clone', 'keys', 'values', 'items', 'has', 'get',
+    'del_key', 'get_member', 'shl', 'shr', 'bitwise_and', 'bitwise_or',
+    'bitwise_xor', 'bitwise_not'
 ];
+
 const libraryFunctions = {
     "msgbox": ["alert", "confirm", "prompt", "password"],
-    "time.datetime": ["now", "diff", "add_days", "format", "today"],
+    "time.datetime": ["now", "diff", "add_days", "format", "today", "parse"],
     "listm": ["map", "filter", "reduce", "min", "max", "reverse", "zip", "zip_longest", "sort", "count", "index_of", "rand_int_list", "rand_float_list"],
     "string": ["split", "strip", "join", "replace", "to_upper", "to_lower", "ord", "chr", "is_digit", "is_ascii_lowercase", "is_ascii_uppercase", "is_ascii_letter", "is_space", "find", "find_all", "startswith", "endswith", "encode", "decode", "format"],
     "math": ["sqrt", "abs", "fact", "sin", "cos", "tan", "gcd", "lcm", "fib", "is_prime", "deg2rad", "rad2deg", "exp", "log", "sinh", "cosh", "tanh", "round", "is_close"],
@@ -46,56 +57,187 @@ const libraryConstants = {
     "sys": ["argv", "os_name"]
 };
 
+function stripCommentsAndStrings(code) {
+    let cleanCode = code.replace(/#.*/g, "");
+    cleanCode = cleanCode.replace(/"""[\s\S]*?"""/g, "");
+    cleanCode = cleanCode.replace(/'''[\s\S]*?'''/g, "");
+    cleanCode = cleanCode.replace(/"([^"\\]|\\.)*"/g, "");
+    cleanCode = cleanCode.replace(/'([^'\\]|\\.)*'/g, "");
+    return cleanCode;
+}
+
+function parseSource(sourceCode, localNsMap, globalSuggestions) {
+    const cleanCode = stripCommentsAndStrings(sourceCode);
+    const lines = cleanCode.split('\n');
+
+    let nsStack = [];
+    let stack = [];
+
+    const nsStart = /\bnamespace\s+([a-zA-Z_]\w*)/;
+    const defunMultiline = /\bdefun\b(?!.*->)/;
+    const ifMultiline = /\b(?<!el)if\b.*?\bdo\s*$/;
+    const whileMultiline = /\bwhile\b.*?\bdo\s*$/;
+    const forMultiline = /\bfor\b.*?\bdo\s*$/;
+
+    const funcPattern = /defun\s+([a-zA-Z_]\w*)/g;
+    const varPattern = /([a-zA-Z_]\w*)\s*=/g;
+    const forPattern = /(?:\bfor|,)\s+([a-zA-Z_]\w*)/g;
+
+    const getMatches = (regex, text) => {
+        let m, results = [];
+        regex.lastIndex = 0;
+        while ((m = regex.exec(text)) !== null) {
+            results.push(m[1]);
+        }
+        return results;
+    };
+
+    for (let line of lines) {
+        let stripped = line.trim();
+        if (!stripped) continue;
+
+        if (stripped === "done" || stripped.endsWith(" done")) {
+            if (stack.length > 0) {
+                let top = stack.pop();
+                if (top.startsWith("ns:")) {
+                    nsStack.pop();
+                }
+            }
+            continue;
+        }
+
+        let nsMatch = stripped.match(nsStart);
+        if (nsMatch) {
+            let nsName = nsMatch[1];
+            nsStack.push(nsName);
+            stack.push("ns:" + nsName);
+
+            globalSuggestions.add(nsName);
+            globalSuggestions.add(nsStack.join("."));
+            continue;
+        }
+
+        if (defunMultiline.test(stripped) || ifMultiline.test(stripped) ||
+            whileMultiline.test(stripped) || forMultiline.test(stripped)) {
+            stack.push("generic");
+        }
+
+        let currentNs = nsStack.join(".");
+        let funcs = getMatches(funcPattern, stripped);
+        let vars = getMatches(varPattern, stripped);
+        let fors = getMatches(forPattern, stripped);
+
+        if (currentNs) {
+            if (!localNsMap[currentNs]) localNsMap[currentNs] = new Set();
+            funcs.forEach(f => localNsMap[currentNs].add(f));
+            vars.forEach(v => localNsMap[currentNs].add(v));
+        } else {
+            funcs.forEach(f => globalSuggestions.add(f));
+            vars.forEach(v => globalSuggestions.add(v));
+            fors.forEach(f => globalSuggestions.add(f));
+        }
+    }
+}
+
 function activate(context) {
     const provider = vscode.languages.registerCompletionItemProvider('zerionyx', {
         provideCompletionItems(document, position) {
-            const linePrefix = document.lineAt(position).text.slice(0, position.character);
-            const fullText = document.getText();
+            const lineText = document.lineAt(position).text;
+            const linePrefix = lineText.slice(0, position.character);
 
-            for (const lib in libraryFunctions) {
-                if (linePrefix.endsWith(`${lib}.`)) {
-                    const funcs = libraryFunctions[lib].map(func => new vscode.CompletionItem(func, vscode.CompletionItemKind.Method));
-                    const consts = (libraryConstants[lib] || []).map(c => new vscode.CompletionItem(c, vscode.CompletionItemKind.Field));
-                    return [...funcs, ...consts];
+            if (linePrefix.includes('#')) {
+                return undefined;
+            }
+
+            const fullText = document.getText();
+            let stdLibsLoaded = new Set();
+            let localFilesToScan = new Set();
+
+            const loadPattern = /load\s+["']([^"']+)["']/g;
+            let match;
+            while ((match = loadPattern.exec(fullText)) !== null) {
+                let p = match[1];
+                if (p.startsWith("libs.")) {
+                    stdLibsLoaded.add(p.slice(5));
+                } else if (p.startsWith("local.")) {
+                    localFilesToScan.add(p.slice(6));
                 }
             }
 
-            const userDefinedCompletions = [];
-            const variableRegex = /([a-zA-Z_]\w*)\s*=/g;
-            const functionRegex = /defun\s+([a-zA-Z_]\w*)/g;
-            const namespaceRegex = /namespace\s+([a-zA-Z_]\w*)/g;
-            const forVarRegex = /(?:\bfor|,)\s+([a-zA-Z_]\w*)/g;
+            let localNsMap = {};
+            let globalSuggestions = new Set();
 
-            let match;
+            parseSource(fullText, localNsMap, globalSuggestions);
 
-            while ((match = variableRegex.exec(fullText)) !== null) {
-                userDefinedCompletions.push(new vscode.CompletionItem(match[1], vscode.CompletionItemKind.Variable));
+            if (document.uri.scheme === 'file') {
+                const baseDir = path.dirname(document.uri.fsPath);
+                for (let loc of localFilesToScan) {
+                    let relPath = loc.replace(/\./g, path.sep);
+                    let localPathZyx = path.join(baseDir, relPath + ".zyx");
+                    let localPathZex = path.join(baseDir, relPath + ".zex");
+
+                    let targetPath = fs.existsSync(localPathZyx) ? localPathZyx : (fs.existsSync(localPathZex) ? localPathZex : null);
+                    if (targetPath) {
+                        try {
+                            let localText = fs.readFileSync(targetPath, 'utf-8');
+                            parseSource(localText, localNsMap, globalSuggestions);
+                        } catch (e) { }
+                    }
+                }
             }
-            while ((match = functionRegex.exec(fullText)) !== null) {
-                userDefinedCompletions.push(new vscode.CompletionItem(match[1], vscode.CompletionItemKind.Function));
-            }
-            while ((match = namespaceRegex.exec(fullText)) !== null) {
-                userDefinedCompletions.push(new vscode.CompletionItem(match[1], vscode.CompletionItemKind.Module));
-            }
-            while ((match = forVarRegex.exec(fullText)) !== null) {
-                userDefinedCompletions.push(new vscode.CompletionItem(match[1], vscode.CompletionItemKind.Variable));
+
+            let completions = [];
+
+            const dotMatch = linePrefix.match(/([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)\.([a-zA-Z_]\w*)?$/);
+
+            if (dotMatch) {
+                let prefix = dotMatch[1];
+                let rootLib = prefix.split('.')[0];
+
+                if (stdLibsLoaded.has(prefix) || stdLibsLoaded.has(rootLib)) {
+                    if (libraryFunctions[prefix]) {
+                        libraryFunctions[prefix].forEach(f => {
+                            completions.push(new vscode.CompletionItem(f, vscode.CompletionItemKind.Method));
+                        });
+                    }
+                    if (libraryConstants[prefix]) {
+                        libraryConstants[prefix].forEach(c => {
+                            completions.push(new vscode.CompletionItem(c, vscode.CompletionItemKind.Field));
+                        });
+                    }
+                }
+
+                if (localNsMap[prefix]) {
+                    localNsMap[prefix].forEach(member => {
+                        completions.push(new vscode.CompletionItem(member, vscode.CompletionItemKind.Property));
+                    });
+                }
+                return completions;
             }
 
-            const allKeywords = [
-                ...zerionyxKeywords.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.Keyword)),
-                ...zerionyxControlFlow.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.Keyword)),
-                ...zerionyxOperators.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.Operator)),
-                ...zerionyxConstants.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.Constant)),
-                ...zerionyxTypeConstants.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.TypeParameter)),
-                ...zerionyxBuiltins.map(k => new vscode.CompletionItem(k, vscode.CompletionItemKind.Function)),
-            ];
+            zerionyxKeywords.forEach(k => completions.push(new vscode.CompletionItem(k, vscode.CompletionItemKind.Keyword)));
+            zerionyxControlFlow.forEach(k => completions.push(new vscode.CompletionItem(k, vscode.CompletionItemKind.Keyword)));
+            zerionyxOperators.forEach(k => completions.push(new vscode.CompletionItem(k, vscode.CompletionItemKind.Operator)));
+            zerionyxConstants.forEach(k => completions.push(new vscode.CompletionItem(k, vscode.CompletionItemKind.Constant)));
+            zerionyxTypeConstants.forEach(k => completions.push(new vscode.CompletionItem(k, vscode.CompletionItemKind.TypeParameter)));
+            zerionyxBuiltins.forEach(k => completions.push(new vscode.CompletionItem(k, vscode.CompletionItemKind.Function)));
 
-            const allCompletions = [...allKeywords, ...userDefinedCompletions];
+            stdLibsLoaded.forEach(lib => {
+                completions.push(new vscode.CompletionItem(lib, vscode.CompletionItemKind.Module));
+            });
 
-            const uniqueCompletions = Array.from(new Set(allCompletions.map(item => item.label)))
-                .map(label => {
-                    return allCompletions.find(item => item.label === label);
-                });
+            globalSuggestions.forEach(sym => {
+                completions.push(new vscode.CompletionItem(sym, vscode.CompletionItemKind.Variable));
+            });
+
+            const uniqueCompletions = [];
+            const seen = new Set();
+            for (let item of completions) {
+                if (!seen.has(item.label)) {
+                    seen.add(item.label);
+                    uniqueCompletions.push(item);
+                }
+            }
 
             return uniqueCompletions;
         }
