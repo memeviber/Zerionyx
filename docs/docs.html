@@ -1,3 +1,267 @@
+Mình đọc qua toàn bộ file, nhìn chung rất ổn. Có vài chỗ mình thấy nên thay ngay vì sẽ tăng độ chuyên nghiệp khá nhiều. Chỉ cần thay những đoạn nhỏ dưới đây.
+
+
+---
+
+1. Thêm phần "Language Philosophy" ngay sau Getting Started
+
+<section id="language-philosophy">
+    <h2>Language Philosophy</h2>
+
+    <p>
+        Zerionyx is designed to make programming approachable without sacrificing
+        expressive power.
+    </p>
+
+    <ul>
+        <li>Readable syntax over clever syntax.</li>
+        <li>Explicit blocks using <code>done</code>.</li>
+        <li>Python interoperability whenever needed.</li>
+        <li>Simple enough for beginners, powerful enough for scripting.</li>
+        <li>Consistency across the language and standard library.</li>
+    </ul>
+</section>
+
+và thêm vào sidebar
+
+<li><a href="#language-philosophy">Language Philosophy</a></li>
+
+
+---
+
+2. Thêm "Features"
+
+Ngay dưới Getting Started.
+
+<section id="features">
+<h2>Features</h2>
+
+<ul>
+<li>Interactive REPL</li>
+<li>Python interoperability via <code>pyexec()</code></li>
+<li>Cross-platform</li>
+<li>High precision <code>CFloat</code></li>
+<li>Visual error diagnostics</li>
+<li>Standard library included</li>
+<li>ZEX executable packaging</li>
+<li>Namespace-based libraries</li>
+</ul>
+
+</section>
+
+
+---
+
+3. Nhấn mạnh pyexec
+
+Ngay trước Built-in Functions.
+
+<div class="note"
+style="border-left:5px solid var(--neon-blue);padding:10px;background:rgba(0,255,204,.1);margin:20px 0;">
+<strong>Python Interoperability</strong><br>
+
+Zerionyx can execute embedded Python code through
+<code>pyexec()</code>, allowing direct access to Python's
+ecosystem whenever Zerionyx itself is not enough.
+</div>
+
+Đây là tính năng rất mạnh, nên đừng để nó chỉ là một dòng trong danh sách hàm.
+
+
+---
+
+4. Thêm Quick Example
+
+Ngay dưới tiêu đề Documentation.
+
+<section id="quick-example">
+
+<h2>Quick Example</h2>
+
+<pre><code class="highlight-Zerionyx">defun greet(name)
+    println("Hello " + name)
+done
+
+greet("World")
+</code></pre>
+
+</section>
+
+Người đọc sẽ thấy ngay syntax.
+
+
+---
+
+5. Thêm Architecture
+
+Sau Grammar.
+
+<section id="architecture">
+
+<h2>Architecture</h2>
+
+<pre>
+
+Source Code
+      │
+      ▼
+   Lexer
+      │
+      ▼
+   Parser
+      │
+      ▼
+     AST
+      │
+      ▼
+ Interpreter
+      │
+      ▼
+ Runtime
+      │
+      ▼
+ Python
+
+</pre>
+
+</section>
+
+
+---
+
+6. Thêm Benchmark
+
+<section id="benchmark">
+
+<h2>Performance</h2>
+
+<table>
+
+<tr>
+<th>Runtime</th>
+<th>Relative Speed</th>
+</tr>
+
+<tr>
+<td>CPython 3.11</td>
+<td>1x</td>
+</tr>
+
+<tr>
+<td>PyPy 3.11</td>
+<td>≈ 2–5x faster</td>
+</tr>
+
+</table>
+
+<p>
+For long-running scripts, PyPy is recommended.
+</p>
+
+</section>
+
+
+---
+
+7. Thêm "Why Zerionyx?"
+
+Đây là đoạn mình nghĩ đáng thêm nhất.
+
+<section id="why">
+
+<h2>Why Zerionyx?</h2>
+
+<ul>
+
+<li>Simple syntax.</li>
+
+<li>Powerful scripting capabilities.</li>
+
+<li>Built-in batteries included.</li>
+
+<li>Python interoperability.</li>
+
+<li>Fast startup.</li>
+
+<li>Easy to learn.</li>
+
+<li>Designed for education and automation.</li>
+
+</ul>
+
+</section>
+
+
+---
+
+8. Sửa footer
+
+Hiện tại:
+
+Zerionyx © 2025—2026 MemeViber
+
+nên sửa thành
+
+Zerionyx © 2025–Present • Developed by MemeViber
+
+Nhìn chuyên nghiệp hơn.
+
+
+---
+
+9. Thêm Version
+
+Ngay dưới H1.
+
+<p class="version">
+Version 5.0.5 • Python 3.11+
+</p>
+
+
+---
+
+10. Thêm Documentation Statistics
+
+Cuối trang.
+
+<section>
+
+<h2>Documentation</h2>
+
+<ul>
+
+<li>20+ language features</li>
+
+<li>19 standard libraries</li>
+
+<li>100+ built-in functions</li>
+
+<li>Interactive REPL</li>
+
+<li>ZEX packaging support</li>
+
+</ul>
+
+</section>
+
+
+---
+
+Đánh giá
+
+Trong các đề xuất trên, nếu chỉ được chọn 3 đoạn đáng thêm nhất, mình sẽ chọn:
+
+1. Language Philosophy ⭐⭐⭐⭐⭐
+
+
+2. Why Zerionyx? ⭐⭐⭐⭐⭐
+
+
+3. Architecture Diagram ⭐⭐⭐⭐☆
+
+
+
+Ba mục này khiến trang tài liệu trông giống tài liệu của các ngôn ngữ lập trình lớn (Rust, Go, Zig, Odin...) hơn rất nhiều, trong khi chỉ cần thêm vài chục dòng HTML.
 <!DOCTYPE html>
 <html lang="en">
 
