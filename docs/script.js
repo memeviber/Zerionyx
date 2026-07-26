@@ -1,8 +1,26 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const navToggle = document.querySelector('.nav-toggle');
-    const nav = document.querySelector('nav');
+    const sidebar = document.querySelector('.sidebar');
 
-    navToggle.addEventListener('click', function () {
-        nav.classList.toggle('active');
-    });
+    if (navToggle && sidebar) {
+        navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('active');
+        });
+
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (sidebar.classList.contains('active') && 
+                !sidebar.contains(e.target) && 
+                !navToggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
 });
