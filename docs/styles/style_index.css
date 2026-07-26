@@ -192,12 +192,9 @@ main {
 .code-body {
     padding: 1.5rem;
     overflow-x: auto;
-    max-height: 480px;
-    overflow-y: auto;
 }
 
 .code-body::-webkit-scrollbar {
-    width: 6px;
     height: 6px;
 }
 
@@ -401,7 +398,6 @@ footer a:hover {
 
     .code-body {
         padding: 1rem;
-        max-height: 380px;
     }
 
     pre code {
