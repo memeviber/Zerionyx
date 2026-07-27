@@ -224,7 +224,7 @@ Use commands such as `grammar`, `license`, etc., for more details.
 * [X] Add algorithms & data structure libraries
 * [X] Integrate debugger support
 * [X] Improving interpreter performance 
-* [X] Creating **VS Code plugin**
+* [X] Creating VS Code extension
 ---
 
 ## Contributing
