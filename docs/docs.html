@@ -573,15 +573,14 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <h3>Using and Using Parent</h3>
                     <p>
                         The <code>using</code> statement is used to explicitly bind a variable reference to the
-                        <strong>global scope</strong> rather than creating a new local variable. This allows a function
-                        to <strong>read from and modify</strong> a global variable directly.
+                        global scope rather than creating a new local variable. This allows a function
+                        to read from and modify a global variable directly.
                     </p>
                     
 
-                    <h4><code>using<variable></code>: The <code>global</code> Analogy</h4>
+                    <h4><code>using</code>:
                     <p>
-                        When you need a function to modify a variable that exists in the global scope (or a specific
-                        top-level namespace), <code>using</code> creates a direct, writable link to that original
+                        When you need a function to modify a variable that exists in the global scope, <code>using</code> creates a direct, writable link to that original
                         variable. This brings the name into the local scope for easy access.
                     </p>
                     
@@ -599,11 +598,11 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"App is running: "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">is_running</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: App is running: false</span>
 </code></pre>
                     
-                    <h4><code>using parent</code> Statement: The <code>nonlocal</code> Analogy</h4>
+                    <h4><code>using parent</code>:
                         <p>
                             The <code>using parent</code> statement is used inside nested functions.
-                            It binds a variable reference to the <strong>immediate parent function&rsquo;s
-                                scope</strong>,
+                            It binds a variable reference to the immediate parent function&rsquo;s
+                                scope,
                             similar to Python&rsquo;s <code>nonlocal</code> keyword.
                         </p>
                         
