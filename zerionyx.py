@@ -56,11 +56,13 @@ BODY ::= STATEMENT | (NEWLINE STATEMENTS "done")
 
 EXPR ::= ASSIGNMENT_EXPR
 
+TARGET_EXPR ::= DOLLAR_EXPR
+
 ASSIGNMENT_EXPR ::=
-    (IDENTIFIER AUG_ASSIGN_OP EXPR)
+   (TARGET_EXPR ASSIGN_OP EXPR)
   | LOGIC_EXPR
 
-AUG_ASSIGN_OP ::= "+=" | "-=" | "*=" | "/=" | "//=" | "%=" | "^="
+ASSIGN_OP ::= "=" | "+=" | "-=" | "*=" | "/=" | "//=" | "%=" | "^="
 
 LOGIC_EXPR ::= COMP_EXPR (("and" | "or") COMP_EXPR)*
 
@@ -74,8 +76,8 @@ TERM ::= FACTOR (("*" | "/" | "//" | "%") FACTOR)*
 
 FACTOR ::=
     "-" FACTOR
-  | "*" FACTOR                      (* vargs unpacking *) 
-  | "**" FACTOR                     (* kargs unpacking *)
+  | "*" FACTOR                      (* vargs unpacking *)
+  | "**" FACTOR                     (* kwargs unpacking *)
   | DOLLAR_EXPR
 
 DOLLAR_EXPR ::= POWER ("$" POWER)*  (* $ is for indexing instead of [] *)
@@ -117,7 +119,7 @@ FOR_IN_CLAUSE ::= IDENTIFIER ("," IDENTIFIER)* "in" EXPR
 
 FOR_RANGE_CLAUSES ::= FOR_RANGE_CLAUSE ("," FOR_RANGE_CLAUSE)*
 
-FOR_RANGE_CLAUSE ::= IDENTIFIER ["=" EXPR] "to" EXPR ["step" EXPR]
+FOR_RANGE_CLAUSE ::= IDENTIFIER ["=" EXPR] "to" EXPR ["step" EXPR]?
 
 WHILE_EXPR ::= "while" EXPR "do" BODY
 
@@ -143,24 +145,10 @@ L = """
 
 MIT License
 
-WARNING: This project contains code adapted from multiple public sources.
-
-Some components are originally based on David Callanan's interpreter tutorial (2019),
-licensed under the MIT License. Other parts are believed to derive from Fus3n's version,
-which did not include an explicit license but was publicly shared for free use and modification.
-
-Only modifications made by MemeViber are explicitly claimed under copyright.
-Reasonable efforts have been made to trace original authors.
-If you are an original author and believe attribution or licensing is missing,
-please contact MemeViber.
-
-Credits:
-- David Callanan (2019, original author)
-- Fus3n (2022, based on David Callanan's version)
-- angelcaru (2024, modified David Callanan's version)
-- MemeViber (2025-2026, further modified Fus3n's version, with some code adapted from angelcaru's version)
-
-Copyright (c) 2019-2026
+Copyright (c) 2019 David Callanan
+Copyright (c) 2021-2022 Fus3n
+Copyright (c) 2024 angelcaru
+Copyright (c) 2025-2026 MemeViber
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -179,6 +167,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+ADDITIONAL NOTICE & CREDITS:
+
+This project contains code adapted from multiple public sources:
+
+- David Callanan (2019): Original interpreter tutorial, licensed under the MIT License.
+- Fus3n (2021-2022): As stated by the author on r/Python (subreddit), the codebase 
+  was built following David Callanan's tutorial with modifications. While the repository 
+  lacks an explicit license file, the author explicitly noted in the README: 
+  "you're free to try it out or use it if you can".
+- angelcaru (2024): Modified David Callanan's version.
+- MemeViber (2025-2026): Further modified and optimized Fus3n's version, incorporating 
+  components adapted from angelcaru's version.
+
+Only modifications made by MemeViber are explicitly claimed under MemeViber's copyright. 
+Reasonable efforts have been made to maintain proper attribution and trace the project's 
+lineage. If you are one of the original authors and have questions or concerns regarding 
+this notice, please contact MemeViber.
 
 """
 
@@ -461,7 +469,7 @@ def main():
                     continue
                 if text.strip() == "credits":
                     print(
-                        "Credits:\n- David Callanan (2019, original author)\n- Fus3n (2022, based on David Callanan's version)\n- angelcaru (2024, modified David Callanan's version)\n- MemeViber (2025-2026, further modified Fus3n's version, with some code adapted from angelcaru's version)"
+                        "Credits:\n- Copyright (c) 2019 David Callanan\n- Copyright (c) 2021-2022 Fus3n\n- Copyright (c) 2024 angelcaru\n- Copyright (c) 2025-2026 MemeViber"
                     )
                     continue
                 if text.strip() == "docs":
