@@ -144,14 +144,14 @@ function parseScopes(code) {
         }
 
         let m;
-        const singleLineFunc = /defun\s+([a-zA-Z_]\w*)\s*\(.*?\)\s*->/g;
-        while ((m = singleLineFunc.exec(stripped)) !== null) {
-            currentScope.symbols.set(m[1], vscode.CompletionItemKind.Function);
-        }
-
         const varPattern = /([a-zA-Z_]\w*)\s*=/g;
         while ((m = varPattern.exec(stripped)) !== null) {
             currentScope.symbols.set(m[1], vscode.CompletionItemKind.Variable);
+        }
+
+        const singleLineFunc = /defun\s+([a-zA-Z_]\w*)\s*\(.*?\)\s*->/g;
+        while ((m = singleLineFunc.exec(stripped)) !== null) {
+            currentScope.symbols.set(m[1], vscode.CompletionItemKind.Function);
         }
 
         const forPattern = /(?:\bfor|,)\s+([a-zA-Z_]\w*)/g;
