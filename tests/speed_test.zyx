@@ -1,7 +1,7 @@
 load "libs.time"
 load "libs.sys"
 
-N = 100000000
+N = 1000000
 repeats = 10
 times = []
 
@@ -41,6 +41,6 @@ println("Slowest: " + to_str(slowest) + " s")
 # Slowest: 7.311691522598267 s
 
 # Zerionyx executed on PyPy 3.11 (v7.3.19, 64-bit, JIT enabled) on AMD Ryzen 7 4800H laptop (plugged-in mode):
-# Average: 0.385618782043457 s
-# Fastest: 0.343375682830810 s
-# Slowest: 0.444282054901123 s
+# Average: 0.5655260562896729 s
+# Fastest: 0.5318043231964111 s
+# Slowest: 0.6470570564270020 s
