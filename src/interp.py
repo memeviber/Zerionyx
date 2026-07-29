@@ -1134,7 +1134,7 @@ class BuiltInFunction(BaseFunction):
 
     @set_args(["command"])
     def execute_osystem_fp(self, exec_ctx):
-        cmd = exec_ctx.symbol_table.get("cmd")
+        cmd = exec_ctx.symbol_table.get("command")
         result = subprocess.run(
             cmd.value,
             shell=True,
@@ -3348,9 +3348,8 @@ class BuiltInFunction(BaseFunction):
                     exec_ctx,
                 )
             )
-        found = any(
-            k.value == key.value for k in hm.value.keys() if hasattr(k, "value")
-        )
+        
+        found = key.value in hm.value
         return RTResult().success(Number.true if found else Number.false)
 
     @set_args(["hm", "key", "default"], [None, None, Number.none])
