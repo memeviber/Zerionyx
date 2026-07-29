@@ -11,17 +11,17 @@ defun to_binary(n)
     return binary_str
 done
 
-println("=== 1. Chuyển đổi nhị phân ===")
+println("=== 1. Binary Conversion ===")
 number = 42
-println("Số thập phân: " + to_str(number))
-println("Số nhị phân : " + to_binary(number)) # 42 = 0000000000101010
+println("Decimal number: " + to_str(number))
+println("Binary number : " + to_binary(number)) # 42 = 0000000000101010
 println("")
 
 
-println("=== 2. XOR Swap (Tráo đổi không dùng biến tạm) ===")
+println("=== 2. XOR Swap (Swap Without a Temporary Variable) ===")
 x = 1337
 y = 7331
-println("Trước khi swap: x = " + to_str(x) + ", y = " + to_str(y))
+println("Before swap: x = " + to_str(x) + ", y = " + to_str(y))
 
 # x = x ^ y
 # y = x ^ y
@@ -30,11 +30,11 @@ x = bitwise_xor(x, y)
 y = bitwise_xor(x, y)
 x = bitwise_xor(x, y)
 
-println("Sau khi swap : x = " + to_str(x) + ", y = " + to_str(y))
+println("After swap : x = " + to_str(x) + ", y = " + to_str(y))
 println("")
 
 
-println("=== 3. Hệ thống phân quyền UNIX ===")
+println("=== 3. UNIX Permission System ===")
 
 EXECUTE = 1  # 0001
 WRITE   = 2  # 0010
@@ -42,21 +42,21 @@ READ    = 4  # 0100
 
 user_permission = 0
 
-# 0100 | 0010 = 0110 (Mã 6)
+# 0100 | 0010 = 0110 (Permission value: 6)
 user_permission = bitwise_or(user_permission, READ)
 user_permission = bitwise_or(user_permission, WRITE)
-println("Quyền hiện tại của User (nhị phân): " + to_binary(user_permission))
+println("Current user permissions (binary): " + to_binary(user_permission))
 
 has_write = bitwise_and(user_permission, WRITE) != 0
 has_exec  = bitwise_and(user_permission, EXECUTE) != 0
 
-println("User có quyền GHI không?       : " + to_str(has_write)) # true
-println("User có quyền THỰC THI không?  : " + to_str(has_exec))  # false
+println("Does the user have WRITE permission?    : " + to_str(has_write)) # true
+println("Does the user have EXECUTE permission?  : " + to_str(has_exec))  # false
 
 # mask_clear_write = ~WRITE
 # user_permission  = user_permission & (~WRITE)
 user_permission = bitwise_and(user_permission, bitwise_not(WRITE))
-println("Sau khi xóa quyền GHI (nhị phân) : " + to_binary(user_permission))
+println("After removing WRITE permission (binary): " + to_binary(user_permission))
 
 has_write_now = bitwise_and(user_permission, WRITE) != 0
-println("User còn quyền GHI nữa không?   : " + to_str(has_write_now)) # false
+println("Does the user still have WRITE permission? : " + to_str(has_write_now)) # false

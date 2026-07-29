@@ -266,7 +266,7 @@
                 },
                 {
                     "name": "keyword.control.zerionyx",
-                    "match": "\\b(del|if|elif|for|while|in|to|step|do|done|return|break|continue|defun|load|else|namespace|using|and|or|not)\\b"
+                    "match": "\\b(until|del|if|elif|for|while|in|to|step|do|done|return|break|continue|defun|load|else|namespace|using|and|or|not)\\b"
                 }
             ]
         },

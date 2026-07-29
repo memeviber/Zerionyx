@@ -4,7 +4,7 @@ const path = require('path');
 
 const zerionyxKeywords = [
     'load', 'namespace', 'done', 'defun', 'using', 'parent',
-    'if', 'elif', 'else', 'do', 'for', 'to', 'step', 'in', 'while', 'del'
+    'if', 'elif', 'else', 'do', 'for', 'to', 'step', 'in', 'while', 'del', 'until'
 ];
 const zerionyxControlFlow = ['return', 'continue', 'break'];
 const zerionyxOperators = ['and', 'or', 'not'];
@@ -66,22 +66,30 @@ function stripCommentsAndStrings(code) {
     return cleanCode;
 }
 
-function parseSource(sourceCode, localNsMap, globalSuggestions) {
-    const cleanCode = stripCommentsAndStrings(sourceCode);
+class Scope {
+    constructor(type, name, startLine, parent = null) {
+        this.type = type;
+        this.name = name;
+        this.startLine = startLine;
+        this.endLine = Infinity;
+        this.parent = parent;
+        this.symbols = new Map();
+        this.children = [];
+    }
+}
+
+function parseScopes(code) {
+    const cleanCode = stripCommentsAndStrings(code);
     const lines = cleanCode.split('\n');
 
-    let nsStack = [];
-    let stack = [];
+    let rootScope = new Scope("global", "global", 0);
+    let currentScope = rootScope;
 
     const nsStart = /\bnamespace\s+([a-zA-Z_]\w*)/;
-    const defunMultiline = /\bdefun\b(?!.*->)/;
-    const ifMultiline = /\b(?<!el)if\b.*?\bdo\s*$/;
-    const whileMultiline = /\bwhile\b.*?\bdo\s*$/;
-    const forMultiline = /\bfor\b.*?\bdo\s*$/;
-
-    const funcPattern = /defun\s+([a-zA-Z_]\w*)/g;
-    const varPattern = /([a-zA-Z_]\w*)\s*=/g;
-    const forPattern = /(?:\bfor|,)\s+([a-zA-Z_]\w*)/g;
+    const defunStart = /\bdefun\s+([a-zA-Z_]\w*)?\b(?!.*->)/;
+    const ifStart = /\b(?<!el)if\b.*?\bdo\s*$/;
+    const whileStart = /\bwhile\b.*?\bdo\s*$/;
+    const forStart = /\bfor\b.*?\bdo\s*$/;
 
     const getMatches = (regex, text) => {
         let m, results = [];
@@ -92,16 +100,15 @@ function parseSource(sourceCode, localNsMap, globalSuggestions) {
         return results;
     };
 
-    for (let line of lines) {
+    for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+        let line = lines[lineIdx];
         let stripped = line.trim();
         if (!stripped) continue;
 
         if (stripped === "done" || stripped.endsWith(" done")) {
-            if (stack.length > 0) {
-                let top = stack.pop();
-                if (top.startsWith("ns:")) {
-                    nsStack.pop();
-                }
+            if (currentScope.parent) {
+                currentScope.endLine = lineIdx;
+                currentScope = currentScope.parent;
             }
             continue;
         }
@@ -109,34 +116,119 @@ function parseSource(sourceCode, localNsMap, globalSuggestions) {
         let nsMatch = stripped.match(nsStart);
         if (nsMatch) {
             let nsName = nsMatch[1];
-            nsStack.push(nsName);
-            stack.push("ns:" + nsName);
+            let newScope = new Scope("namespace", nsName, lineIdx, currentScope);
+            currentScope.children.push(newScope);
 
-            globalSuggestions.add(nsName);
-            globalSuggestions.add(nsStack.join("."));
+            currentScope.symbols.set(nsName, vscode.CompletionItemKind.Module);
+            currentScope = newScope;
             continue;
         }
 
-        if (defunMultiline.test(stripped) || ifMultiline.test(stripped) ||
-            whileMultiline.test(stripped) || forMultiline.test(stripped)) {
-            stack.push("generic");
+        let defunMatch = stripped.match(defunStart);
+        if (defunMatch) {
+            let funcName = defunMatch[1] || "anonymous";
+            let newScope = new Scope("function", funcName, lineIdx, currentScope);
+            currentScope.children.push(newScope);
+
+            if (defunMatch[1]) {
+                currentScope.symbols.set(funcName, vscode.CompletionItemKind.Function);
+            }
+            currentScope = newScope;
+            continue;
         }
 
-        let currentNs = nsStack.join(".");
-        let funcs = getMatches(funcPattern, stripped);
-        let vars = getMatches(varPattern, stripped);
-        let fors = getMatches(forPattern, stripped);
+        if (ifStart.test(stripped) || whileStart.test(stripped) || forStart.test(stripped)) {
+            let newScope = new Scope("loop", "block", lineIdx, currentScope);
+            currentScope.children.push(newScope);
+            currentScope = newScope;
+        }
 
-        if (currentNs) {
-            if (!localNsMap[currentNs]) localNsMap[currentNs] = new Set();
-            funcs.forEach(f => localNsMap[currentNs].add(f));
-            vars.forEach(v => localNsMap[currentNs].add(v));
-        } else {
-            funcs.forEach(f => globalSuggestions.add(f));
-            vars.forEach(v => globalSuggestions.add(v));
-            fors.forEach(f => globalSuggestions.add(f));
+        let m;
+        const singleLineFunc = /defun\s+([a-zA-Z_]\w*)\s*\(.*?\)\s*->/g;
+        while ((m = singleLineFunc.exec(stripped)) !== null) {
+            currentScope.symbols.set(m[1], vscode.CompletionItemKind.Function);
+        }
+
+        const varPattern = /([a-zA-Z_]\w*)\s*=/g;
+        while ((m = varPattern.exec(stripped)) !== null) {
+            currentScope.symbols.set(m[1], vscode.CompletionItemKind.Variable);
+        }
+
+        const forPattern = /(?:\bfor|,)\s+([a-zA-Z_]\w*)/g;
+        while ((m = forPattern.exec(stripped)) !== null) {
+            currentScope.symbols.set(m[1], vscode.CompletionItemKind.Variable);
         }
     }
+
+    rootScope.endLine = lines.length;
+    return rootScope;
+}
+
+function findActiveScope(scope, lineIdx) {
+    for (let child of scope.children) {
+        if (lineIdx >= child.startLine && lineIdx <= child.endLine) {
+            return findActiveScope(child, lineIdx);
+        }
+    }
+    return scope;
+}
+
+function collectScopeSymbols(scope, localNsMap, globalSuggestions) {
+    let curr = scope;
+    let nsPath = [];
+
+    while (curr) {
+        if (curr.type === "namespace") {
+            nsPath.unshift(curr.name);
+            let fullNsName = nsPath.join(".");
+
+            if (!localNsMap[fullNsName]) {
+                localNsMap[fullNsName] = new Map();
+            }
+            curr.symbols.forEach((kind, name) => {
+                let mappedKind = kind === vscode.CompletionItemKind.Function
+                    ? vscode.CompletionItemKind.Method
+                    : vscode.CompletionItemKind.Field;
+                localNsMap[fullNsName].set(name, mappedKind);
+            });
+        } else {
+            curr.symbols.forEach((kind, name) => {
+                globalSuggestions.set(name, kind);
+            });
+        }
+        curr = curr.parent;
+    }
+}
+
+function collectGlobalSymbolsOnly(rootScope, localNsMap, globalSuggestions) {
+    rootScope.symbols.forEach((kind, name) => {
+        globalSuggestions.set(name, kind);
+    });
+
+    rootScope.children.forEach(child => {
+        if (child.type === "namespace") {
+            let nsPath = [child.name];
+            let collectNs = (nsScope, pathArr) => {
+                let fullNsName = pathArr.join(".");
+                if (!localNsMap[fullNsName]) {
+                    localNsMap[fullNsName] = new Map();
+                }
+                nsScope.symbols.forEach((kind, name) => {
+                    let mappedKind = kind === vscode.CompletionItemKind.Function
+                        ? vscode.CompletionItemKind.Method
+                        : vscode.CompletionItemKind.Field;
+                    localNsMap[fullNsName].set(name, mappedKind);
+                });
+
+                nsScope.children.forEach(subChild => {
+                    if (subChild.type === "namespace") {
+                        collectNs(subChild, [...pathArr, subChild.name]);
+                    }
+                });
+            };
+            collectNs(child, nsPath);
+        }
+    });
 }
 
 function activate(context) {
@@ -165,22 +257,23 @@ function activate(context) {
             }
 
             let localNsMap = {};
-            let globalSuggestions = new Set();
+            let globalSuggestions = new Map();
 
-            parseSource(fullText, localNsMap, globalSuggestions);
-
+            const rootScope = parseScopes(fullText);
+            const activeScope = findActiveScope(rootScope, position.line);
+            collectScopeSymbols(activeScope, localNsMap, globalSuggestions);
             if (document.uri.scheme === 'file') {
                 const baseDir = path.dirname(document.uri.fsPath);
                 for (let loc of localFilesToScan) {
                     let relPath = loc.replace(/\./g, path.sep);
                     let localPathZyx = path.join(baseDir, relPath + ".zyx");
-                    let localPathZex = path.join(baseDir, relPath + ".zex");
 
-                    let targetPath = fs.existsSync(localPathZyx) ? localPathZyx : (fs.existsSync(localPathZex) ? localPathZex : null);
+                    let targetPath = fs.existsSync(localPathZyx) ? localPathZyx : null;
                     if (targetPath) {
                         try {
                             let localText = fs.readFileSync(targetPath, 'utf-8');
-                            parseSource(localText, localNsMap, globalSuggestions);
+                            let loadedRoot = parseScopes(localText);
+                            collectGlobalSymbolsOnly(loadedRoot, localNsMap, globalSuggestions);
                         } catch (e) { }
                     }
                 }
@@ -208,8 +301,8 @@ function activate(context) {
                 }
 
                 if (localNsMap[prefix]) {
-                    localNsMap[prefix].forEach(member => {
-                        completions.push(new vscode.CompletionItem(member, vscode.CompletionItemKind.Property));
+                    localNsMap[prefix].forEach((kind, member) => {
+                        completions.push(new vscode.CompletionItem(member, kind));
                     });
                 }
                 return completions;
@@ -226,8 +319,8 @@ function activate(context) {
                 completions.push(new vscode.CompletionItem(lib, vscode.CompletionItemKind.Module));
             });
 
-            globalSuggestions.forEach(sym => {
-                completions.push(new vscode.CompletionItem(sym, vscode.CompletionItemKind.Variable));
+            globalSuggestions.forEach((kind, sym) => {
+                completions.push(new vscode.CompletionItem(sym, kind));
             });
 
             const uniqueCompletions = [];
