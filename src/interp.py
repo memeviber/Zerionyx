@@ -4610,6 +4610,15 @@ class BuiltInFunction(BaseFunction):
                     exec_ctx,
                 )
             )
+        if b.value < 0:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    "Negative shift count is not allowed",
+                    exec_ctx,
+                )
+            )
         return RTResult().success(Number(int(a.value) << int(b.value)))
 
     @set_args(["a", "b"])
@@ -4634,8 +4643,17 @@ class BuiltInFunction(BaseFunction):
                     exec_ctx,
                 )
             )
+        if b.value < 0:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    "Negative shift count is not allowed",
+                    exec_ctx,
+                )
+            )
         return RTResult().success(Number(int(a.value) >> int(b.value)))
-
+    
     @set_args(["a", "b"])
     def execute_bitwise_and(self, exec_ctx):
         a = exec_ctx.symbol_table.get("a")

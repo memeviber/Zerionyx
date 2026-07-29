@@ -1,25 +1,38 @@
 load "libs.sys"
-load "libs.math"
 load "libs.string"
 load "libs.time"
 load "libs.memory"
 load "libs.keyboard"
 
-A = 0
-B = 0
-sin_ = math.sin # get member beforehand to avoid overhead
-cos_ = math.cos # get member beforehand to avoid overhead
+defun rotate(t, x, y)
+    f = x
+    x_new = x - t * y
+    y_new = y + t * f
+    norm = (3 - x_new * x_new - y_new * y_new) / 2
+    return [x_new * norm, y_new * norm]
+done
+
+sA = 0.0 # sin(A)
+cA = 1.0 # cos(A)
+sB = 0.0 # sin(B)
+cB = 1.0 # cos(B)
+
 loop_count = 0
-max_loop = to_int(2 * math.PI / 0.04, false) # 157 frames
+max_loop = 314
 shading = [".", ",", "-", "~", ":", ";", "=", "!", "*", "#", "$", "@"]
+
 print(string.chr(27) + "[2J" + string.chr(27) + "[H")
+
 while true do
     frame_id = "frame_" + to_str(loop_count)
     cached = memory.recall(frame_id)
+    
     if loop_count > max_loop do
         loop_count = 0
-        A = 0
-        B = 0
+        sA = 0.0
+        cA = 1.0
+        sB = 0.0
+        cB = 1.0
         continue
     else do
         if cached != none do
@@ -35,23 +48,25 @@ while true do
             print("Rendering donut... (" + to_str(loop_count) + "/" + to_str(max_loop) + " frames)\r")
             z = [0] * 1760
             b = [" "] * 1760
-            for j = 0 until 628 step 7 do
-                for i = 0 until 628 step 2 do
-                    c = sin_(i / 100)
-                    d = cos_(j / 100)
-                    e = sin_(A)
-                    f = sin_(j / 100)
-                    g = cos_(A)
-                    h = d + 2
-                    D = 1 / (c * h * e + f * g + 5)
-                    l = cos_(i / 100)
-                    m = cos_(B)
-                    n = sin_(B)
-                    t = c * h * g - f * e
-                    x = to_int(40 + 30 * D * (l * h * m - t * n), false)
-                    y = to_int(12 + 15 * D * (l * h * n + t * m), false)
+            
+            sj = 0.0 # sin(j)
+            cj = 1.0 # cos(j)
+            
+            for j = 0 to 90 do
+                si = 0.0 # sin(i)
+                ci = 1.0 # cos(i)
+                
+                for i = 0 to 314 do
+                    A_geom = cj + 2
+                    D = 1 / (si * A_geom * sA + sj * cA + 5)
+                    t = si * A_geom * cA - sj * sA
+                    
+                    x = to_int(40 + 30 * D * (ci * A_geom * cB - t * sB), false)
+                    y = to_int(12 + 15 * D * (ci * A_geom * sB + t * cB), false)
                     o = x + 80 * y
-                    N = to_int(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n), false)
+                    
+                    N = to_int(8 * ((sj * sA - si * cj * cA) * cB - si * cj * sA - sj * cA - ci * cj * sB), false)
+                    
                     if o >= 0 and o < 1760 and y < 22 and y > 0 and x > 0 do
                         z_val = z$o
                         if D > z_val do
@@ -60,10 +75,19 @@ while true do
                             b$o = char
                         done
                     done
+                    
+                    res_i = rotate(0.02, ci, si)
+                    ci = res_i$0
+                    si = res_i$1
                 done
+                
+                res_j = rotate(0.07, cj, sj)
+                cj = res_j$0
+                sj = res_j$1
             done
+            
             frame_str = ""
-            for i = 0 until 1759 do
+            for i = 0 to 1759 do
                 frame_str = frame_str + (b$i)
                 if i % 80 == 79 do
                     frame_str = frame_str + "\n"
@@ -73,6 +97,12 @@ while true do
         done
         loop_count += 1
     done
-    A += 0.04
-    B += 0.08
+    
+    res_A = rotate(0.04, sA, cA)
+    sA = res_A$0
+    cA = res_A$1
+    
+    res_B = rotate(0.02, sB, cB)
+    sB = res_B$0
+    cB = res_B$1
 done

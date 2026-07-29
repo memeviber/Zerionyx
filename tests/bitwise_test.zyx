@@ -1,0 +1,62 @@
+load "libs.string"
+
+defun to_binary(n)
+    binary_str = ""
+    for i = 15 to 0 step -1 do
+        # bit = (n >> i) & 1
+        shifted = shr(n, i)
+        bit = bitwise_and(shifted, 1)
+        binary_str = binary_str + to_str(bit)
+    done
+    return binary_str
+done
+
+println("=== 1. Chuyển đổi nhị phân ===")
+number = 42
+println("Số thập phân: " + to_str(number))
+println("Số nhị phân : " + to_binary(number)) # 42 = 0000000000101010
+println("")
+
+
+println("=== 2. XOR Swap (Tráo đổi không dùng biến tạm) ===")
+x = 1337
+y = 7331
+println("Trước khi swap: x = " + to_str(x) + ", y = " + to_str(y))
+
+# x = x ^ y
+# y = x ^ y
+# x = x ^ y
+x = bitwise_xor(x, y)
+y = bitwise_xor(x, y)
+x = bitwise_xor(x, y)
+
+println("Sau khi swap : x = " + to_str(x) + ", y = " + to_str(y))
+println("")
+
+
+println("=== 3. Hệ thống phân quyền UNIX ===")
+
+EXECUTE = 1  # 0001
+WRITE   = 2  # 0010
+READ    = 4  # 0100
+
+user_permission = 0
+
+# 0100 | 0010 = 0110 (Mã 6)
+user_permission = bitwise_or(user_permission, READ)
+user_permission = bitwise_or(user_permission, WRITE)
+println("Quyền hiện tại của User (nhị phân): " + to_binary(user_permission))
+
+has_write = bitwise_and(user_permission, WRITE) != 0
+has_exec  = bitwise_and(user_permission, EXECUTE) != 0
+
+println("User có quyền GHI không?       : " + to_str(has_write)) # true
+println("User có quyền THỰC THI không?  : " + to_str(has_exec))  # false
+
+# mask_clear_write = ~WRITE
+# user_permission  = user_permission & (~WRITE)
+user_permission = bitwise_and(user_permission, bitwise_not(WRITE))
+println("Sau khi xóa quyền GHI (nhị phân) : " + to_binary(user_permission))
+
+has_write_now = bitwise_and(user_permission, WRITE) != 0
+println("User còn quyền GHI nữa không?   : " + to_str(has_write_now)) # false
