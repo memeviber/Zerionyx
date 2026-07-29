@@ -9,7 +9,7 @@ defun parse_config(config_file)
     current_section_name = "__global__"
     current_section_items = []
     lines = string.split(ffio.read(config_file, "r"), "\n")
-    for i to len(lines) do
+    for i until len(lines) do
         line = lines$i
         if line != "" do
             line = string.strip(line, " ")
@@ -61,7 +61,7 @@ defun parse_config(config_file)
             in_single_quote = false
             in_double_quote = false
             val_chars = string.split(val_str_raw, "")
-            for char_idx to len(val_chars) do
+            for char_idx until len(val_chars) do
                 c = val_chars$char_idx
                 if c == "'" and not in_double_quote do
                     in_single_quote = not in_single_quote
@@ -104,11 +104,11 @@ done
 # --- Note --- #
 # use this function to get value from config
 # defun get_config_value(config_data, section_name, key_name, default_value)
-#     for i to len(config_data) do
+#     for i until len(config_data) do
 #         current_section = config_data$i
 #         if current_section$0 == section_name do
 #             items_in_section = current_section$1
-#             for j to len(items_in_section) do
+#             for j until len(items_in_section) do
 #                 kv_pair = items_in_section$j
 #                 if kv_pair$0 == key_name do
 #                     return kv_pair$1
@@ -141,7 +141,7 @@ defun main()
         termcolor.cprintln("No configuration entries found or file is effectively empty.", "yellow")
     else do
         println("\n--- Parsed Configuration ---")
-        for i to len(config_data) do
+        for i until len(config_data) do
             section_block = config_data$i
             section_name = section_block$0
             section_items = section_block$1
@@ -151,7 +151,7 @@ defun main()
             if len(section_items) == 0 do
                 termcolor.cprintln("  (empty section)", "grey", none, none)
             else do
-                for j to len(section_items) do
+                for j until len(section_items) do
                     kv_pair = section_items$j
                     key = kv_pair$0
                     value = kv_pair$1

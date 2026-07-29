@@ -11,7 +11,7 @@ namespace listm
             panic("First argument of 'map' must be a function", "T")
         done
         r = []
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             append(r, f(l$i))
         done
         return r
@@ -19,7 +19,7 @@ namespace listm
 
     defun rand_int_list(l, m, m_)
         l_ = []
-        for _ = 0 to l do
+        for _ = 0 until l do
             append(l_, random.rand_int(m, m_))
         done
         return l_
@@ -27,7 +27,7 @@ namespace listm
 
     defun rand_float_list(l, m, m_)
         l_ = []
-        for _ = 0 to l do
+        for _ = 0 until l do
             append(l_, random.rand_float(m, m_))
         done
         return l_
@@ -41,7 +41,7 @@ namespace listm
             panic("First argument of 'filter' must be a function", "T")
         done
         r = []
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             if f(l$i) do
                 append(r, l$i)
             done
@@ -60,7 +60,7 @@ namespace listm
             panic("Third argument of 'reduce' must be a number", "T")
         done
         acc = i
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             acc = f(acc, l$i)
         done
         return acc
@@ -74,7 +74,7 @@ namespace listm
             panic("First argument of 'min' must be a list of numbers", "T")
         done
         m = l$0
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             if type(l$i) != int and type(l$i) != float do
                 panic("First argument of 'min' must be a list of numbers", "T")
             done
@@ -93,7 +93,7 @@ namespace listm
             panic("First argument of 'max' must be a list of numbers", "T")
         done
         m = l$0
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             if type(l$i) != int and type(l$i) != float do
                 panic("First argument of 'max' must be a list of numbers", "T")
             done
@@ -109,7 +109,7 @@ namespace listm
         if type(l) != list do
             panic("First argument of 'reverse' must be a list", "T")
         done
-        for i = len(l) - 1 to -1 step -1 do
+        for i = len(l) - 1 until -1 step -1 do
             append(r, l$i)
         done
         return r
@@ -123,7 +123,7 @@ namespace listm
             panic("Second argument of 'zip' must be a list", "T")
         done
         _l = min([len(l), len(l_)])
-        for i = 0 to _l do
+        for i = 0 until _l do
             append(r, [l$i, l_$i])
         done
         return r
@@ -138,7 +138,7 @@ namespace listm
             panic("Second argument of 'zip_longest' must be a list", "T")
         done
         m = max([len(l), len(l_)])
-        for i = 0 to m do
+        for i = 0 until m do
             v1 = none
             v2 = none
             if i < len(l) do
@@ -165,7 +165,7 @@ namespace listm
                 panic("All elements of the list must be either numbers or strings", "T")
             done
             
-            for i = 1 to len(l) do
+            for i = 1 until len(l) do
                 t = type(l$i)
                 if is_str and t != str do
                     panic("All elements of the list must be either numbers or strings", "T")
@@ -183,7 +183,7 @@ namespace listm
             panic("First argument of 'count' must be a list", "T")
         done
         c = 0
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             if type(l$i) != str and type(v) == str do
                 if to_str(l$i) == v do
                     c = c + 1
@@ -201,7 +201,7 @@ namespace listm
         if type(l) != list do
             panic("First argument of 'index_of' must be a list", "T")
         done
-        for i = 0 to len(l) do
+        for i = 0 until len(l) do
             if type(l$i) != str and type(v) == str do
                 if to_str(l$i) == v do
                     return i

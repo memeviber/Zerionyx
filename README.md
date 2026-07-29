@@ -148,7 +148,7 @@ for i in nums do
 done
 
 # For loop
-for i = 1 to 11 do
+for i = 1 to 10 do
     println(i)
 done
 

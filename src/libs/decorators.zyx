@@ -42,7 +42,7 @@ namespace decorators
     defun retry(times)
         defun decorator(fn)
             defun wrapper(*vargs, **kargs)
-                for i = 1 to times + 1 do
+                for i = 1 to times do
                     res = is_panic(fn, vargs)
                     result = res$0
                     err = res$1
@@ -120,7 +120,7 @@ namespace decorators
         defun decorator(fn)
             defun wrapper(*vargs, **kargs)
                 last_result = none
-                for i = 1 to n + 1 do
+                for i = 1 to n do
                     last_result = fn(*vargs, **kargs)
                 done
                 return last_result

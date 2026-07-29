@@ -5,7 +5,7 @@ load "libs.termcolor"
 
 defun backup_folder(path, cbp, rbp)
     lf = ffio.list_dir(path)
-    for i = 0 to len(lf) do
+    for i = 0 until len(lf) do
         f = lf$i
         flp = path + ffio.os_sep + f
         fbd = cbp + ffio.os_sep + f

@@ -5,10 +5,10 @@ N = 100000000
 repeats = 10
 times = []
 
-for r = 1 to repeats + 1 do
+for r = 1 to repeats do
     total = 0
     start = time.time()
-    for i = 1 to N + 1 do
+    for i = 1 to N do
         total += i
     done
     end = time.time()

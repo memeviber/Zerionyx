@@ -35,8 +35,8 @@ while true do
             print("Rendering donut... (" + to_str(loop_count) + "/" + to_str(max_loop) + " frames)\r")
             z = [0] * 1760
             b = [" "] * 1760
-            for j = 0 to 628 step 7 do
-                for i = 0 to 628 step 2 do
+            for j = 0 until 628 step 7 do
+                for i = 0 until 628 step 2 do
                     c = sin_(i / 100)
                     d = cos_(j / 100)
                     e = sin_(A)
@@ -63,7 +63,7 @@ while true do
                 done
             done
             frame_str = ""
-            for i = 0 to 1759 do
+            for i = 0 until 1759 do
                 frame_str = frame_str + (b$i)
                 if i % 80 == 79 do
                     frame_str = frame_str + "\n"

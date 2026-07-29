@@ -49,7 +49,7 @@ namespace string
         if len(s) != 1 do
             return false
         done
-        for i = 0 to len(list_digits) do
+        for i = 0 until len(list_digits) do
             if s == list_digits$i do
                 return true
             done
@@ -64,7 +64,7 @@ namespace string
         if len(s) != 1 do
             return false
         done
-        for i = 0 to len(list_ascii_lowercase) do
+        for i = 0 until len(list_ascii_lowercase) do
             if s == list_ascii_lowercase$i do
                 return true
             done
@@ -79,7 +79,7 @@ namespace string
         if len(s) != 1 do
             return false
         done
-        for i = 0 to len(list_ascii_uppercase) do
+        for i = 0 until len(list_ascii_uppercase) do
             if s == list_ascii_uppercase$i do
                 return true
             done
@@ -94,7 +94,7 @@ namespace string
         if len(s) != 1 do
             return false
         done
-        for i = 0 to len(list_ascii_letters) do
+        for i = 0 until len(list_ascii_letters) do
             if s == list_ascii_letters$i do
                 return true
             done

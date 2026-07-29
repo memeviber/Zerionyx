@@ -1154,10 +1154,10 @@ class Parser:
                     var_name_toks, iterable_node, body, False, pos_start, body.pos_end
                 )
             )
-
+        
         elif self.current_tok.type == TT_EQ or self.current_tok.matches(
             TT_KEYWORD, "to"
-        ):
+        ) or self.current_tok.matches(TT_KEYWORD, "until"):
             loop_specs = []
             var_name_tok = first_var_name_tok
 
@@ -1165,8 +1165,10 @@ class Parser:
                 start_value_node = None
                 end_value_node = None
                 step_value_node = None
+                until = False
 
-                if self.current_tok.matches(TT_KEYWORD, "to"):
+                if self.current_tok.matches(TT_KEYWORD, "to") or self.current_tok.matches(TT_KEYWORD, "until"):
+                    until = self.current_tok.matches(TT_KEYWORD, "until")
                     zero_tok = Token(
                         TT_INT, 0, var_name_tok.pos_start, var_name_tok.pos_end
                     )
@@ -1185,15 +1187,16 @@ class Parser:
                     start_value_node = res.register(self.expr(allow_assignment=False))
                     if res.error:
                         return res
-
-                    if not self.current_tok.matches(TT_KEYWORD, "to"):
+                    
+                    if not self.current_tok.matches(TT_KEYWORD, "to") and not self.current_tok.matches(TT_KEYWORD, "until"):
                         return res.failure(
                             InvalidSyntaxError(
                                 self.current_tok.pos_start,
                                 self.current_tok.pos_end,
-                                "Expected 'to'",
+                                "Expected 'to' or 'until'",
                             )
                         )
+                    until = self.current_tok.matches(TT_KEYWORD, "until")
                     res.register_advancement()
                     self.advance()
 
@@ -1205,7 +1208,7 @@ class Parser:
                         InvalidSyntaxError(
                             self.current_tok.pos_start,
                             self.current_tok.pos_end,
-                            "Expected '=' or 'to'",
+                            "Expected '=', 'to' or 'until'",
                         )
                     )
 
@@ -1217,7 +1220,7 @@ class Parser:
                         return res
 
                 loop_specs.append(
-                    (var_name_tok, start_value_node, end_value_node, step_value_node)
+                    (var_name_tok, start_value_node, end_value_node, step_value_node, until)
                 )
 
                 if self.current_tok.type != TT_COMMA:
@@ -1276,8 +1279,8 @@ class Parser:
                     return res
 
             final_node = body_node
-            for var, start, end, step in reversed(loop_specs):
-                final_node = ForNode(var, start, end, step, final_node, is_multiline)
+            for var, start, end, step, loop_until in reversed(loop_specs):
+                final_node = ForNode(var, start, end, step, final_node, is_multiline, loop_until)
 
             return res.success(final_node)
 
@@ -1286,7 +1289,7 @@ class Parser:
                 InvalidSyntaxError(
                     self.current_tok.pos_start,
                     self.current_tok.pos_end,
-                    "Expected 'in', '=', or 'to' after for loop variable",
+                    "Expected 'in', '=', 'to' or 'until' after for loop variable",
                 )
             )
 

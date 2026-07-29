@@ -3,7 +3,7 @@ load "libs.string"
 defun xor_encrypt_decrypt(data, key)
     key_len = len(key)
     result = to_bytes("")
-    for i to len(data) do
+    for i until len(data) do
         result += to_bytes(bitwise_xor(data$i, key$(i % key_len)))
     done
     return result

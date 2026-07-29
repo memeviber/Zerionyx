@@ -69,4 +69,5 @@ KEYWORDS = [
     "del",
     "namespace",
     "using",
+    "until",
 ]

@@ -192,7 +192,7 @@ FOR_IN_CLAUSE ::= IDENTIFIER (<span class="zyx-string">,</span> IDENTIFIER)* <sp
 
 FOR_RANGE_CLAUSES ::= FOR_RANGE_CLAUSE (<span class="zyx-string">,</span> FOR_RANGE_CLAUSE)*
 
-FOR_RANGE_CLAUSE ::= IDENTIFIER [<span class="zyx-string">=</span> EXPR] <span class="zyx-string">to</span> EXPR [<span class="zyx-string">step</span> EXPR]?
+FOR_RANGE_CLAUSE ::= IDENTIFIER [<span class="zyx-string">=</span> EXPR] (<span class="zyx-string">to</span> | <span class="zyx-string">until</span>) EXPR [<span class="zyx-string">step</span> EXPR]?
 
 WHILE_EXPR ::= <span class="zyx-string">while</span> EXPR <span class="zyx-string">do</span> BODY
 
@@ -489,17 +489,22 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <p>Iterates over a range of numbers.</p>
                     
                     <pre><code class="highlight-Zerionyx"><span class="zyx-comment"># Prints numbers from 0 to 10</span>
-<span class="zyx-keyword">for</span> <span class="zyx-var">i</span> <span class="zyx-keyword">to</span> <span class="zyx-number">11</span> <span class="zyx-keyword">do</span>
+<span class="zyx-keyword">for</span> <span class="zyx-var">i</span> <span class="zyx-keyword">to</span> <span class="zyx-number">10</span> <span class="zyx-keyword">do</span>
+    <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">i</span><span class="zyx-types">)</span>
+<span class="zyx-keyword">done</span>
+
+<pre><code class="highlight-Zerionyx"><span class="zyx-comment"># Prints numbers from 0 to 9</span>
+<span class="zyx-keyword">for</span> <span class="zyx-var">i</span> <span class="zyx-keyword">until</span> <span class="zyx-number">10</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">i</span><span class="zyx-types">)</span>
 <span class="zyx-keyword">done</span>
 
 <span class="zyx-comment"># Prints numbers from 00 to 99</span>
-<span class="zyx-keyword">for</span> <span class="zyx-var">i</span> <span class="zyx-keyword">to</span> <span class="zyx-number">10</span><span class="zyx-types">,</span> <span class="zyx-var">j</span> <span class="zyx-keyword">to</span> <span class="zyx-number">10</span> <span class="zyx-keyword">do</span>
+<span class="zyx-keyword">for</span> <span class="zyx-var">i</span> <span class="zyx-keyword">until</span> <span class="zyx-number">10</span><span class="zyx-types">,</span> <span class="zyx-var">j</span> <span class="zyx-keyword">to</span> <span class="zyx-number">9</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">i</span><span class="zyx-types">)</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">j</span><span class="zyx-types">))</span>
 <span class="zyx-keyword">done</span>
 
 <span class="zyx-comment"># Prints even numbers from 2 to 10</span>
-<span class="zyx-keyword">for</span> <span class="zyx-var">j</span> <span class="zyx-types">=</span> <span class="zyx-number">2</span> <span class="zyx-keyword">to</span> <span class="zyx-number">11</span> <span class="zyx-keyword">step</span> <span class="zyx-number">2</span> <span class="zyx-keyword">do</span>
+<span class="zyx-keyword">for</span> <span class="zyx-var">j</span> <span class="zyx-types">=</span> <span class="zyx-number">2</span> <span class="zyx-keyword">to</span> <span class="zyx-number">10</span> <span class="zyx-keyword">step</span> <span class="zyx-number">2</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">j</span><span class="zyx-types">)</span>
 <span class="zyx-keyword">done</span>
 </code></pre>

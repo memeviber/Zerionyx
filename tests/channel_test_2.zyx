@@ -7,7 +7,7 @@ println("--- Producer/Consumer Demo ---")
 messages = channel.new()
 
 defun producer()
-    for i = 1 to 5 do
+    for i = 1 until 5 do
         println("Producer: sending " + to_str(i))
         channel.send(messages, i)
         time.sleep(1)
@@ -16,7 +16,7 @@ defun producer()
 done
 
 defun consumer()
-    for i = 1 to 5 do
+    for i = 1 until 5 do
         msg = channel.recv(messages)
         println("Consumer: received -> " + to_str(msg))
     done

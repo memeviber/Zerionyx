@@ -126,6 +126,7 @@ class ForNode:
         "step_value_node",
         "body_node",
         "should_return_none",
+        "until",
         "pos_start",
         "pos_end",
     ]
@@ -138,6 +139,7 @@ class ForNode:
         step_value_node,
         body_node,
         should_return_none,
+        until,
     ):
         self.var_name_tok = var_name_tok
         self.start_value_node = start_value_node
@@ -145,6 +147,7 @@ class ForNode:
         self.step_value_node = step_value_node
         self.body_node = body_node
         self.should_return_none = should_return_none
+        self.until = until
         self.pos_start = self.var_name_tok.pos_start
 
         if body_node:
@@ -155,7 +158,7 @@ class ForNode:
             self.pos_end = self.end_value_node.pos_end
 
     def __str__(self):
-        return f"ForNode({self.var_name_tok.value} from {self.start_value_node} to {self.end_value_node} step {self.step_value_node} do {self.body_node})"
+        return f"ForNode({self.var_name_tok.value} from {self.start_value_node}" + ("to" if not self.until else "until") + f"{self.end_value_node} step {self.step_value_node} do {self.body_node})"
 
 
 class WhileNode:

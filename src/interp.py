@@ -5481,6 +5481,8 @@ class Interpreter:
             start = int(start_value.value)
             end = int(end_value.value)
             step = int(step_value.value)
+            if not node.until:
+                end += (1 if step > 0 else -1)
         except (ValueError, TypeError):
             return res.failure(
                 RTError(

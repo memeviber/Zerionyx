@@ -7,7 +7,7 @@ if sys.os_name == "nt" do sys.system("color 02")
 
 while true do
     lst = []
-    for _ to 148 do # IDK =)))
+    for _ until 148 do # IDK =)))
         append(lst, random.rand_int(0, 1))
     done
     print(string.join("", lst))

@@ -7,7 +7,7 @@ defun fib(n)
     done
     a = 0
     b = 1
-    for i = 1 to n do
+    for i = 1 until n do
         temp = b
         b = a + b
         a = temp
