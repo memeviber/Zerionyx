@@ -15,7 +15,6 @@ class ThreadPoolError(Exception):
 
 
 class Context:
-
     __slots__ = (
         "display_name",
         "parent",
@@ -37,7 +36,6 @@ class Context:
 
 
 class SymbolTable:
-
     __slots__ = ("symbols", "parent")
 
     def __init__(self, parent=None):
@@ -163,7 +161,7 @@ class Object:
         return TError(
             self.pos_start,
             other.pos_end,
-            f'Illegal operation -> {error_str or "unknown"}',
+            f"Illegal operation -> {error_str or 'unknown'}",
             self.context,
         )
 
@@ -222,7 +220,6 @@ class ThreadWrapper(Object):
 
 
 class NoneObject(Object):
-
     __slots__ = "value"
 
     def __init__(self, value):
@@ -846,7 +843,6 @@ class PyObject(Object):
 
 
 class List(Object):
-
     __slots__ = "value"
 
     def __init__(self, value):
@@ -1056,7 +1052,6 @@ class HashMap(Object):
 
 
 class File(Object):
-
     __slots__ = ("name", "path")
 
     def __init__(self, name, path):

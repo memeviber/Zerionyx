@@ -336,7 +336,6 @@ class Parser:
             return res
 
         if isinstance(node, BinOpNode) and node.op_tok.type == TT_DOLLAR:
-
             aug_ops = {
                 TT_PLUSEQ: TT_PLUS,
                 TT_MINUSEQ: TT_MINUS,
@@ -1154,10 +1153,12 @@ class Parser:
                     var_name_toks, iterable_node, body, False, pos_start, body.pos_end
                 )
             )
-        
-        elif self.current_tok.type == TT_EQ or self.current_tok.matches(
-            TT_KEYWORD, "to"
-        ) or self.current_tok.matches(TT_KEYWORD, "until"):
+
+        elif (
+            self.current_tok.type == TT_EQ
+            or self.current_tok.matches(TT_KEYWORD, "to")
+            or self.current_tok.matches(TT_KEYWORD, "until")
+        ):
             loop_specs = []
             var_name_tok = first_var_name_tok
 
@@ -1167,7 +1168,9 @@ class Parser:
                 step_value_node = None
                 until = False
 
-                if self.current_tok.matches(TT_KEYWORD, "to") or self.current_tok.matches(TT_KEYWORD, "until"):
+                if self.current_tok.matches(
+                    TT_KEYWORD, "to"
+                ) or self.current_tok.matches(TT_KEYWORD, "until"):
                     until = self.current_tok.matches(TT_KEYWORD, "until")
                     zero_tok = Token(
                         TT_INT, 0, var_name_tok.pos_start, var_name_tok.pos_end
@@ -1187,8 +1190,10 @@ class Parser:
                     start_value_node = res.register(self.expr(allow_assignment=False))
                     if res.error:
                         return res
-                    
-                    if not self.current_tok.matches(TT_KEYWORD, "to") and not self.current_tok.matches(TT_KEYWORD, "until"):
+
+                    if not self.current_tok.matches(
+                        TT_KEYWORD, "to"
+                    ) and not self.current_tok.matches(TT_KEYWORD, "until"):
                         return res.failure(
                             InvalidSyntaxError(
                                 self.current_tok.pos_start,
@@ -1220,7 +1225,13 @@ class Parser:
                         return res
 
                 loop_specs.append(
-                    (var_name_tok, start_value_node, end_value_node, step_value_node, until)
+                    (
+                        var_name_tok,
+                        start_value_node,
+                        end_value_node,
+                        step_value_node,
+                        until,
+                    )
                 )
 
                 if self.current_tok.type != TT_COMMA:
@@ -1280,7 +1291,9 @@ class Parser:
 
             final_node = body_node
             for var, start, end, step, loop_until in reversed(loop_specs):
-                final_node = ForNode(var, start, end, step, final_node, is_multiline, loop_until)
+                final_node = ForNode(
+                    var, start, end, step, final_node, is_multiline, loop_until
+                )
 
             return res.success(final_node)
 

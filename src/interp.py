@@ -3760,7 +3760,6 @@ class BuiltInFunction(BaseFunction):
         suppress_error_ = bool(suppress_error.value)
 
         try:
-
             if isinstance(value, Number):
                 hex_str = hex(int(value.value))[2:]
                 if len(hex_str) % 2 != 0:
@@ -4653,7 +4652,7 @@ class BuiltInFunction(BaseFunction):
                 )
             )
         return RTResult().success(Number(int(a.value) >> int(b.value)))
-    
+
     @set_args(["a", "b"])
     def execute_bitwise_and(self, exec_ctx):
         a = exec_ctx.symbol_table.get("a")
@@ -4877,6 +4876,7 @@ class DebugState:
         self.last_paused_line = -1
         self.last_paused_file = ""
 
+
 class Interpreter:
     _shared_debug_state = None
 
@@ -4908,34 +4908,52 @@ class Interpreter:
                 Interpreter._shared_debug_state = None
 
     @property
-    def breakpoints(self): return self.state.breakpoints
+    def breakpoints(self):
+        return self.state.breakpoints
+
     @breakpoints.setter
-    def breakpoints(self, val): self.state.breakpoints = val
+    def breakpoints(self, val):
+        self.state.breakpoints = val
 
     @property
-    def step_into(self): return self.state.step_into
+    def step_into(self):
+        return self.state.step_into
+
     @step_into.setter
-    def step_into(self, val): self.state.step_into = val
+    def step_into(self, val):
+        self.state.step_into = val
 
     @property
-    def step_over(self): return self.state.step_over
+    def step_over(self):
+        return self.state.step_over
+
     @step_over.setter
-    def step_over(self, val): self.state.step_over = val
+    def step_over(self, val):
+        self.state.step_over = val
 
     @property
-    def step_over_depth(self): return self.state.step_over_depth
+    def step_over_depth(self):
+        return self.state.step_over_depth
+
     @step_over_depth.setter
-    def step_over_depth(self, val): self.state.step_over_depth = val
+    def step_over_depth(self, val):
+        self.state.step_over_depth = val
 
     @property
-    def last_paused_line(self): return self.state.last_paused_line
+    def last_paused_line(self):
+        return self.state.last_paused_line
+
     @last_paused_line.setter
-    def last_paused_line(self, val): self.state.last_paused_line = val
+    def last_paused_line(self, val):
+        self.state.last_paused_line = val
 
     @property
-    def last_paused_file(self): return self.state.last_paused_file
+    def last_paused_file(self):
+        return self.state.last_paused_file
+
     @last_paused_file.setter
-    def last_paused_file(self, val): self.state.last_paused_file = val
+    def last_paused_file(self, val):
+        self.state.last_paused_file = val
 
     def get_node_pos(self, node):
         if hasattr(node, "pos_start"):
@@ -5500,7 +5518,7 @@ class Interpreter:
             end = int(end_value.value)
             step = int(step_value.value)
             if not node.until:
-                end += (1 if step > 0 else -1)
+                end += 1 if step > 0 else -1
         except (ValueError, TypeError):
             return res.failure(
                 RTError(

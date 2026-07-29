@@ -29,7 +29,6 @@ class StringNode:
 
 
 class ListNode:
-
     __slots__ = ["element_nodes", "pos_start", "pos_end"]
 
     def __init__(self, element_nodes, pos_start, pos_end):
@@ -158,7 +157,11 @@ class ForNode:
             self.pos_end = self.end_value_node.pos_end
 
     def __str__(self):
-        return f"ForNode({self.var_name_tok.value} from {self.start_value_node}" + ("to" if not self.until else "until") + f"{self.end_value_node} step {self.step_value_node} do {self.body_node})"
+        return (
+            f"ForNode({self.var_name_tok.value} from {self.start_value_node}"
+            + ("to" if not self.until else "until")
+            + f"{self.end_value_node} step {self.step_value_node} do {self.body_node})"
+        )
 
 
 class WhileNode:
@@ -277,7 +280,6 @@ class BreakNode:
 
 
 class AccessNode:
-
     def __init__(self, obj, index):
         self.obj = obj
         self.index = index
