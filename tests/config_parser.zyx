@@ -1,7 +1,7 @@
 load "std.filesys"
 load "std.sys"
 load "std.string"
-load "std.listm"
+load "std.collections"
 load "std.termcolor"
 
 defun parse_config(config_file)
@@ -21,7 +21,7 @@ defun parse_config(config_file)
             if len(current_section_items) > 0 or current_section_name != "__global__" do
                 append(parsed_config_data, [current_section_name, current_section_items])
             done
-            end_idx = listm.index_of(string.split(line, ""), "]")
+            end_idx = collections.index_of(string.split(line, ""), "]")
             if end_idx == none do
                 termcolor.cprint("Error", "red", none, "bold")
                 println(": line " + to_str(i + 1) + " has malformed section (missing ']'). Skipping.")

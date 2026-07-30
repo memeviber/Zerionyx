@@ -1,6 +1,6 @@
-# std.listm
+# std.collections
 
-namespace listm
+namespace collections
     load "std.random"
 
     defun map(f, l)
@@ -198,5 +198,141 @@ namespace listm
             done
         done
         return none
+    done
+
+    defun merge(h1, h2)
+        if type(h1) != hashmap or type(h2) != hashmap do
+            panic("Both arguments of 'merge' must be hashmaps", "T")
+        done
+        r = clone(h1)
+        it = items(h2)
+        for i = 0 until len(it) do
+            pair = it$i
+            r$pair$0 = pair$1
+        done
+        return r
+    done
+
+    defun invert(h)
+        if type(h) != hashmap do
+            panic("First argument of 'invert' must be a hashmap", "T")
+        done
+        r = {}
+        it = items(h)
+        for i = 0 until len(it) do
+            pair = it$i
+            if type(pair$1) != str do
+                panic("Cannot invert hashmap: all values in the original hashmap must be strings", "T")
+            done
+            r$pair$1 = pair$0
+        done
+        return r
+    done
+
+    defun from_keys(l, default=none)
+        if type(l) != list do
+            panic("First argument of 'from_keys' must be a list", "T")
+        done
+        r = {}
+        for i = 0 until len(l) do
+            if type(l$i) != str do
+                panic("All keys in the list must be strings", "T")
+            done
+            r$l$i = default
+        done
+        return r
+    done
+
+    defun any(f, l)
+        if type(l) != list do
+            panic("Second argument of 'any' must be a list", "T")
+        done
+        if type(f) != func do
+            panic("First argument of 'any' must be a function", "T")
+        done
+        for i = 0 until len(l) do
+            if f(l$i) do
+                return true
+            done
+        done
+        return false
+    done
+
+    defun all(f, l)
+        if type(l) != list do
+            panic("Second argument of 'all' must be a list", "T")
+        done
+        if type(f) != func do
+            panic("First argument of 'all' must be a function", "T")
+        done
+        for i = 0 until len(l) do
+            if not f(l$i) do
+                return false
+            done
+        done
+        return true
+    done
+
+    defun find(f, l)
+        if type(l) != list do
+            panic("Second argument of 'find' must be a list", "T")
+        done
+        if type(f) != func do
+            panic("First argument of 'find' must be a function", "T")
+        done
+        for i = 0 until len(l) do
+            if f(l$i) do
+                return l$i
+            done
+        done
+        return none
+    done
+
+    defun unique(l)
+        if type(l) != list do
+            panic("First argument of 'unique' must be a list", "T")
+        done
+        r = []
+        for i = 0 until len(l) do
+            val = l$i
+            if index_of(r, val) == none do
+                append(r, val)
+            done
+        done
+        return r
+    done
+
+    defun map_values(f, h)
+        if type(h) != hashmap do
+            panic("Second argument of 'map_values' must be a hashmap", "T")
+        done
+        if type(f) != func do
+            panic("First argument of 'map_values' must be a function", "T")
+        done
+        r = {}
+        it = items(h)
+        for i = 0 until len(it) do
+            pair = it$i
+            r$pair$0 = f(pair$1)
+        done
+        return r
+    done
+
+    defun map_filter(f, h)
+        if type(h) != hashmap do
+            panic("Second argument of 'map_filter' must be a hashmap", "T")
+        done
+        if type(f) != func do
+            panic("First argument of 'map_filter' must be a function", "T")
+        done
+        r = {}
+        it = items(h)
+        for i = 0 until len(it) do
+            pair = it$i
+            if f(pair$0, pair$1) do
+                r$pair$0 = pair$1
+            done
+        done
+        return r
     done
 done
