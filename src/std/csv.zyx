@@ -1,12 +1,17 @@
 # std.csv
 
 namespace csv
-    defun write(f, data)
-        write_csv_fp(f, data)
-        return none
+    defun parse(s)
+        if type(s) != str do
+            panic("First argument of 'parse' must be a string", "T")
+        done
+        return parse_csv_fp(s)
     done
 
-    defun read(f)
-        return read_csv_fp(f)
+    defun stringify(data)
+        if type(data) != hashmap do
+            panic("First argument of 'stringify' must be a hashmap", "T")
+        done
+        return stringify_csv_fp(data)
     done
 done

@@ -4766,78 +4766,65 @@ class BuiltInFunction(BaseFunction):
             )
         return RTResult().success(Number(~int(a.value)))
 
-    @set_args(["file_path"])
-    def execute_read_csv_fp(self, exec_ctx):
-        file_path_obj = exec_ctx.symbol_table.get("file_path")
-        if not isinstance(file_path_obj, String):
+    @set_args(["csv_str"])
+    def execute_parse_csv_fp(self, exec_ctx):
+        import io
+        import csv
+
+        csv_str_obj = exec_ctx.symbol_table.get("csv_str")
+        if not isinstance(csv_str_obj, String):
             return RTResult().failure(
                 TError(
                     self.pos_start,
                     self.pos_end,
-                    "First argument of 'read' must be a string",
+                    "First argument of 'parse' must be a string",
                     exec_ctx,
                 )
             )
 
         try:
-            file_path = file_path_obj.value
-            with open(file_path, mode="r", newline="", encoding="utf-8") as csvfile:
-                reader = csv.reader(csvfile)
+            csv_str = csv_str_obj.value
+            csv_file = io.StringIO(csv_str)
+            reader = csv.reader(csv_file)
 
-                try:
-                    header = next(reader)
-                except StopIteration:
-                    return RTResult().success(HashMap({}))
+            try:
+                header = next(reader)
+            except StopIteration:
+                return RTResult().success(HashMap({}))
 
-                py_data = {col_name: [] for col_name in header}
+            py_data = {col_name: [] for col_name in header}
 
-                for row in reader:
-                    if len(row) == len(header):
-                        for col_name, cell_value in zip(header, row):
-                            py_data[col_name].append(cell_value)
+            for row in reader:
+                if len(row) == len(header):
+                    for col_name, cell_value in zip(header, row):
+                        py_data[col_name].append(cell_value)
 
             zyx_hashmap = self.validate_pyexec_result(py_data)
             return RTResult().success(zyx_hashmap)
 
-        except FileNotFoundError:
-            return RTResult().failure(
-                IError(
-                    self.pos_start,
-                    self.pos_end,
-                    f"File not found: '{file_path_obj.value}'",
-                    exec_ctx,
-                )
-            )
         except Exception as e:
             return RTResult().failure(
                 IError(
                     self.pos_start,
                     self.pos_end,
-                    f"Error reading CSV file: {e}",
+                    f"Error parsing CSV string: {e}",
                     exec_ctx,
                 )
             )
 
-    @set_args(["file_path", "data"])
-    def execute_write_csv_fp(self, exec_ctx):
-        file_path_obj = exec_ctx.symbol_table.get("file_path")
+    @set_args(["data"])
+    def execute_stringify_csv_fp(self, exec_ctx):
+        import io
+        import csv
+
         data_obj = exec_ctx.symbol_table.get("data")
 
-        if not isinstance(file_path_obj, String):
-            return RTResult().failure(
-                TError(
-                    self.pos_start,
-                    self.pos_end,
-                    "First argument of 'write' must be a string",
-                    exec_ctx,
-                )
-            )
         if not isinstance(data_obj, HashMap):
             return RTResult().failure(
                 TError(
                     self.pos_start,
                     self.pos_end,
-                    "Second argument of 'write' must be a hashmap",
+                    "First argument of 'stringify' must be a hashmap",
                     exec_ctx,
                 )
             )
@@ -4846,8 +4833,7 @@ class BuiltInFunction(BaseFunction):
             py_data = self.convert_zer_to_py(data_obj)
 
             if not py_data:
-                open(file_path_obj.value, "w").close()
-                return RTResult().success(Number.none)
+                return RTResult().success(String(""))
 
             columns = list(py_data.values())
             if columns:
@@ -4866,20 +4852,21 @@ class BuiltInFunction(BaseFunction):
             header = list(py_data.keys())
             rows_to_write = zip(*py_data.values())
 
-            with open(
-                file_path_obj.value, mode="w", newline="", encoding="utf-8"
-            ) as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow(header)
-                writer.writerows(rows_to_write)
+            csv_file = io.StringIO()
+            writer = csv.writer(csv_file)
+            writer.writerow(header)
+            writer.writerows(rows_to_write)
 
-            return RTResult().success(Number.none)
+            csv_string = csv_file.getvalue()
+            csv_file.close()
+
+            return RTResult().success(String(csv_string))
         except Exception as e:
             return RTResult().failure(
                 IError(
                     self.pos_start,
                     self.pos_end,
-                    f"Error writing to CSV file: {e}",
+                    f"Error stringifying CSV data: {e}",
                     exec_ctx,
                 )
             )

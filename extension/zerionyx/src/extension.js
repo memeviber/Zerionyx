@@ -47,7 +47,7 @@ const libraryFunctions = {
     "mouse": ["move", "click", "right_click", "scroll", "position"],
     "screen": ["capture", "capture_area", "get_color"],
     "json": ["parse", "stringify"],
-    "csv": ["read", "write"],
+    "csv": ["parse", "stringify"],
     "decorators": ["cache", "once", "retry", "timeout", "log_call", "measure_time", "repeat", "ignore_error", "deprecated", "lazy"],
     "channel": ["new", "send", "recv", "is_empty"]
 };

@@ -56,12 +56,9 @@ namespace listm
         if type(f) != func do
             panic("First argument of 'reduce' must be a function", "T")
         done
-        if type(i) != int and type(i) != float do
-            panic("Third argument of 'reduce' must be a number", "T")
-        done
         acc = i
-        for i = 0 until len(l) do
-            acc = f(acc, l$i)
+        for idx = 0 until len(l) do
+            acc = f(acc, l$idx)
         done
         return acc
     done
@@ -75,7 +72,7 @@ namespace listm
         done
         m = l$0
         for i = 0 until len(l) do
-            if type(l$i) != int and type(l$i) != float do
+            if type(l$i) != int and type(l$i) != float and type(l$i) != cfloat do
                 panic("First argument of 'min' must be a list of numbers", "T")
             done
             if (l$i) < m do
@@ -94,7 +91,7 @@ namespace listm
         done
         m = l$0
         for i = 0 until len(l) do
-            if type(l$i) != int and type(l$i) != float do
+            if type(l$i) != int and type(l$i) != float and type(l$i) != cfloat do
                 panic("First argument of 'max' must be a list of numbers", "T")
             done
             if (l$i) > m do
@@ -159,7 +156,7 @@ namespace listm
         if len(l) > 0 do
             first_type = type(l$0)
             is_str = (first_type == str)
-            is_num = (first_type == int or first_type == float)
+            is_num = (first_type == int or first_type == float or first_type == cfloat)
             
             if not (is_str or is_num) do
                 panic("All elements of the list must be either numbers or strings", "T")
@@ -169,7 +166,7 @@ namespace listm
                 t = type(l$i)
                 if is_str and t != str do
                     panic("All elements of the list must be either numbers or strings", "T")
-                elif is_num and (t != int and t != float) do
+                elif is_num and (t != int and t != float and t != cfloat) do
                     panic("All elements of the list must be either numbers or strings", "T")
                 done
             done
@@ -184,14 +181,8 @@ namespace listm
         done
         c = 0
         for i = 0 until len(l) do
-            if type(l$i) != str and type(v) == str do
-                if to_str(l$i) == v do
-                    c = c + 1
-                done
-            else do
-                if l$i == v do
-                    c = c + 1
-                done
+            if l$i == v do
+                c = c + 1
             done
         done
         return c
@@ -202,14 +193,8 @@ namespace listm
             panic("First argument of 'index_of' must be a list", "T")
         done
         for i = 0 until len(l) do
-            if type(l$i) != str and type(v) == str do
-                if to_str(l$i) == v do
-                    return i
-                done
-            else do
-                if l$i == v do
-                    return i
-                done
+            if l$i == v do
+                return i
             done
         done
         return none

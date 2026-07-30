@@ -1311,15 +1311,13 @@ that spans across multiple lines."""</span></code></pre>
                 <div id="lib-csv">
                     <h3>csv.zyx</h3>
                     <ul>
-                        <li><b>read(file_path)</b> &rarr; list &mdash; Read CSV file at <code>file_path</code> and
-                            return
-                            header-keyed hashmap of column lists</li>
-                        <li><b>write(file_path, data)</b> &rarr; none &mdash; Write <code>data</code> to CSV file at
-                            <code>file_path</code>
+                        <li><b>parse(s)</b> &rarr; hashmap &mdash; Parse CSV string <code>s</code> and
+                            return a header-keyed hashmap of column lists</li>
+                        <li><b>stringify(data)</b> &rarr; str &mdash; Convert a header-keyed hashmap <code>data</code>
+                            of column lists into a CSV-formatted string
                         </li>
                     </ul>
                 </div>
-
             </section>
         </main>
     </div>
