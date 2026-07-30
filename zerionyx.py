@@ -230,11 +230,7 @@ def pack_zex(output_file, main_script, other_files):
                     with open(f, "r", encoding="utf-8") as file:
                         content = file.read()
 
-                    lines = content.splitlines()
-                    processed_lines = [line.strip() for line in lines if line.strip()]
-                    processed_content = ";".join(processed_lines)
-
-                    zf.writestr(filename, processed_content.encode("utf-8"))
+                    zf.writestr(filename, content.encode("utf-8"))
 
                 else:
                     with open(f, "rb") as file:
@@ -287,11 +283,7 @@ def run_zex(file_path):
                 with open(main_script_path, "r", encoding="utf-8") as file:
                     text = file.read()
 
-                text = text.splitlines()
-                for i in range(len(text)):
-                    text[i] = text[i].strip()
-
-                result, error = run(main_script_path, "\n".join(text))
+                result, error = run(main_script_path, text)
 
                 if error:
                     if hasattr(error, "as_string"):
@@ -362,7 +354,7 @@ def main():
     )
     parser.add_argument("file", nargs="?", help="The .zyx or .zex file to execute")
 
-    args = parser.parse_args()
+    args, remaining = parser.parse_known_args()
     debug_mode = args.debug
 
     if args.version:
@@ -383,6 +375,7 @@ def main():
 
     if args.file:
         file_name = os.path.abspath(args.file)
+        sys.argv = [args.file] + remaining
 
         if not file_name.endswith((".zyx", ".zex")):
             print(
@@ -404,10 +397,8 @@ def main():
             check_file_comments_or_empty(file_name)
             with open(file_name, "r", encoding="utf-8") as file:
                 text = file.read()
-            text = text.splitlines()
-            for i in range(len(text)):
-                text[i] = text[i].strip()
-            result, error = run(file_name, "\n".join(text), debug_mode=debug_mode)
+            # Truyền trực tiếp chuỗi thô nguyên bản vào trình thông dịch
+            result, error = run(file_name, text, debug_mode=debug_mode)
             if error:
                 if hasattr(error, "as_string"):
                     print(f"{error.as_string()}")

@@ -15,7 +15,11 @@ namespace string
     done
 
     defun strip(s, sep=" ")
-        return strip_fp(s, sep)
+        r = strip_fp(s, sep)
+        if is_none(r) do
+            return ""
+        done
+        return r
     done 
 
     defun join(s, l)

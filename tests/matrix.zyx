@@ -1,14 +1,90 @@
-load "std.random"
 load "std.sys"
-load "std.string"
+load "std.time"
 
-clear()
-if sys.os_name == "nt" do sys.system("color 02")
+defun matrix_effect()
+    CLEAR_SCREEN = "\033[2J"
+    RESET_CURSOR = "\033[H"
+    HIDE_CURSOR  = "\033[?25l"
+    SHOW_CURSOR  = "\033[?25h"
+    RESET_COLOR  = "\033[0m"
 
-while true do
-    lst = []
-    for _ until 148 do # IDK =)))
-        append(lst, random.rand_int(0, 1))
+    # pushing the hot path down to native Python functions reduces overhead and increases speed
+    py_code = """
+import random
+import shutil
+
+if 'cols' not in locals():
+    cols, rows = shutil.get_terminal_size()
+    streams = [[random.randint(-rows, 0), random.choice([1, 2]), 0] for _ in range(cols)]
+    color_matrix = [[-1 for _ in range(cols)] for _ in range(rows)]
+    char_matrix = [[" " for _ in range(cols)] for _ in range(rows)]
+else:
+    curr_cols, curr_rows = shutil.get_terminal_size()
+    if curr_cols != cols or curr_rows != rows:
+        cols, rows = curr_cols, curr_rows
+        streams = [[random.randint(-rows, 0), random.choice([1, 2]), 0] for _ in range(cols)]
+        color_matrix = [[-1 for _ in range(cols)] for _ in range(rows)]
+        char_matrix = [[" " for _ in range(cols)] for _ in range(rows)]
+
+COLOR_GRADIENT = [
+    \"\\033[38;5;231m\",
+    \"\\033[38;5;121m\",
+    \"\\033[38;5;47m\",
+    \"\\033[38;5;34m\",
+    \"\\033[38;5;22m\",
+]
+
+CHARS = \"ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890X*+-<>:|+%\"
+
+for y in range(rows):
+    for x in range(cols):
+        if color_matrix[y][x] != -1:
+            if random.random() > 0.95:
+                char_matrix[y][x] = random.choice(CHARS)
+            if random.random() > 0.6:
+                color_matrix[y][x] += 1
+                if color_matrix[y][x] >= len(COLOR_GRADIENT):
+                    color_matrix[y][x] = -1
+                    char_matrix[y][x] = " "
+
+for x in range(cols):
+    y, speed, tick = streams[x]
+    tick += 1
+    streams[x][2] = tick
+    if tick % speed == 0:
+        y += 1
+        streams[x][0] = y
+        if 0 <= y < rows:
+            color_matrix[y][x] = 0
+            char_matrix[y][x] = random.choice(CHARS)
+        if y >= rows:
+            streams[x] = [random.randint(-10, 0), random.choice([1, 2]), 0]
+
+output_list = []
+for y in range(rows):
+    for x in range(cols):
+        color_idx = color_matrix[y][x]
+        if color_idx == -1:
+            output_list.append(" ")
+        else:
+            output_list.append(f"{COLOR_GRADIENT[color_idx]}{char_matrix[y][x]}")
+    output_list.append("\\n")
+
+output = "".join(output_list)
+"""
+    print(CLEAR_SCREEN + HIDE_CURSOR)
+
+    env = {} 
+
+    while true do
+        res = pyexec(py_code, env)
+        env = res
+        
+        print(RESET_CURSOR + res$"output")
+        time.sleep(0.03)
     done
-    print(string.join("", lst))
+done
+
+if is_main do
+    matrix_effect()
 done

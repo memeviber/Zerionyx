@@ -37,7 +37,8 @@ class Error:
         line_text = get_line_from_text(self.pos_start.ftxt, self.pos_start.ln)
 
         if line_text is not None:
-            result += f"{Fore.LIGHTRED_EX}--> {line_text.strip()}{Style.RESET_ALL}\n"
+            s = ' \t\r'
+            result += f"{Fore.LIGHTRED_EX}--> {line_text.strip(s)}{Style.RESET_ALL}\n"
 
         result += f"\n{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}{self.error_name}{Style.RESET_ALL}: {Fore.MAGENTA}{self.details}{Style.RESET_ALL}"
         return result
@@ -86,7 +87,8 @@ class RTError(Error):
 
         line_text = get_line_from_text(self.pos_start.ftxt, self.pos_start.ln)
         if line_text is not None:
-            result += f"{Fore.LIGHTRED_EX}--> {line_text.strip()}{Style.RESET_ALL}\n"
+            s = ' \t\r'
+            result += f"{Fore.LIGHTRED_EX}--> {line_text.strip(s)}{Style.RESET_ALL}\n"
 
         result += f"\n{Fore.LIGHTMAGENTA_EX}{Style.BRIGHT}{self.error_name}{Style.RESET_ALL}: {Fore.MAGENTA}{self.details}{Style.RESET_ALL}"
         return result

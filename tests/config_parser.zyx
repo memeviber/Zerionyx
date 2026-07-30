@@ -10,18 +10,18 @@ defun parse_config(config_file)
     current_section_items = []
     lines = string.split(filesys.read(config_file, "r"), "\n")
     for i until len(lines) do
-        line = lines$i
-        if line != "" do
-            line = string.strip(line, " ")
-            if string.startswith(line, "#") or string.startswith(line, ";") do
-                continue
-            done
+        line = string.strip(lines$i, " \t\r")
+
+        if line == "" or string.startswith(line, "#") or string.startswith(line, ";") do
+            continue
         done
+
         if string.startswith(line, "[") do
             if len(current_section_items) > 0 or current_section_name != "__global__" do
                 append(parsed_config_data, [current_section_name, current_section_items])
             done
-            end_idx = collections.index_of(string.split(line, ""), "]")
+            
+            end_idx = string.find(line, "]")
             if end_idx == none do
                 termcolor.cprint("Error", "red", none, "bold")
                 println(": line " + to_str(i + 1) + " has malformed section (missing ']'). Skipping.")
@@ -73,12 +73,14 @@ defun parse_config(config_file)
                 done
             done
         done
-        if is_num(to_int(val_str_processed, true)) do
-            if string.endswith(to_str(to_float(val_str_processed, false)), ".0") do
-                val = to_int(val_str_processed, false)
-            else do
-                val = to_float(val_str_processed, false)
-            done
+        
+        int_val = to_int(val_str_processed, true)
+        float_val = to_float(val_str_processed, true)
+        
+        if is_num(int_val) do
+            val = int_val
+        elif is_num(float_val) do
+            val = float_val
         elif val_str_processed == "none" do
             val = none
         elif val_str_processed == "true" do

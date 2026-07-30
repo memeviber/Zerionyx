@@ -205,7 +205,7 @@ python zerionyx.py
 
 Use commands such as `grammar`, `license`, etc., for more details.
 
-### 5. Full Documentation
+### 6. Full Documentation
 
 👉 [Zerionyx Docs](https://memeviber.github.io/Zerionyx/docs.html)
 
@@ -264,13 +264,32 @@ Let’s make Zerionyx better, together 💚
 
 ## Acknowledgments
 
-Thanks to the open-source makers and template authors for README inspiration ([github.com][2], [en.wikipedia.org][1], [makeareadme.com][3]).
+Thanks to the open-source makers, template authors, and the pioneers of this interpreter lineage:
+* **David Callanan (2019):** Original interpreter tutorial and codebase.
+* **Fus3n (2021-2022):** Built upon David's tutorial with custom modifications.
+* **angelcaru (2024):** Optimized and modified variations.
+* **MemeViber (2025-2026):** Maintained, refactored, optimized, and developed standard libraries/tooling.
+
+Special thanks to the authors of README best practices ([github.com][2], [en.wikipedia.org][1], [makeareadme.com][3]).
 
 ---
 
 ## License
 
 Zerionyx is released under the **MIT License**. See [LICENSE](LICENSE).
+
+---
+
+### Additional Notice & Credits
+
+This project contains code adapted from multiple public sources:
+
+- **David Callanan (2019):** Original interpreter tutorial, licensed under the MIT License.
+- **Fus3n (2021-2022):** As stated by the author on r/Python (subreddit), the codebase was built following David Callanan's tutorial with modifications. While the repository lacks an explicit license file, the author explicitly noted in the README: *"you're free to try it out or use it if you can"*.
+- **angelcaru (2024):** Modified David Callanan's version.
+- **MemeViber (2025-2026):** Further modified, refactored, and optimized Fus3n's version, incorporating components adapted from angelcaru's version.
+
+Only modifications made by MemeViber are explicitly claimed under MemeViber's copyright. Reasonable efforts have been made to maintain proper attribution and trace the project's lineage. If you are one of the original authors and have questions or concerns regarding this notice, please contact MemeViber.
 
 ---
 

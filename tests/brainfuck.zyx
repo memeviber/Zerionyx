@@ -1,6 +1,5 @@
 load "std.sys"
 load "std.string"
-load "std.collections"
 
 defun pass() -> none
 

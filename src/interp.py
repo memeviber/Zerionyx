@@ -59,11 +59,7 @@ def load_module(fn, interpreter):
         with open(fn, "r", encoding="utf-8") as f:
             text = f.read()
 
-        text_lines = text.splitlines()
-        for i in range(len(text_lines)):
-            text_lines[i] = text_lines[i].strip()
-
-        lexer = Lexer(fn, "\n".join(text_lines))
+        lexer = Lexer(fn, text)
         tokens, error = lexer.make_tokens()
         if error:
             return None, error
@@ -232,11 +228,13 @@ class Function(BaseFunction):
         value = res.register(interpreter.visit(self.body_node, exec_ctx))
         if res.should_return() and res.func_return_value is None:
             return res
-        ret_value = (
-            (value if self.should_auto_return else None)
-            or res.func_return_value
-            or Number.none
-        )
+        if self.should_auto_return:
+            ret_value = value
+        elif res.func_return_value is not None:
+            ret_value = res.func_return_value
+        else:
+            ret_value = Number.none
+
         return res.success(ret_value)
 
     def copy(self):
@@ -2462,7 +2460,7 @@ class BuiltInFunction(BaseFunction):
             )
         try:
             local_env = self.convert_zer_to_py(args)
-            exec(code.value, {}, local_env)
+            exec(code.value, local_env)
             fr = self.validate_pyexec_result(local_env)
             return RTResult().success(fr)
         except Exception as e:

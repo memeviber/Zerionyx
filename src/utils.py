@@ -17,17 +17,14 @@ class Token:
     def __repr__(self):
         if self.value:
             if self.type == "STRING":
-                return (
-                    f"STRING: '{self.value}'".replace("\n", "\\n")
+                processed_val = (
+                    self.value.replace("\\", "\\\\")
+                    .replace("\n", "\\n")
                     .replace("\t", "\\t")
                     .replace("\r", "\\r")
-                    .replace("\\", "\\\\")
-                    if self.value.find("'") == -1
-                    else f'STRING: "{self.value}"'.replace("\n", "\\n")
-                    .replace("\t", "\\t")
-                    .replace("\r", "\\r")
-                    .replace("\\", "\\\\")
                 )
+                quote = '"' if "'" in self.value else "'"
+                return f"STRING: {quote}{processed_val}{quote}"
             elif (
                 self.value == "INT"
                 or self.value == "FLOAT"
@@ -103,8 +100,8 @@ class RTResult:
 
     def should_return(self):
         return (
-            self.error
-            or self.func_return_value
+            self.error is not None
+            or self.func_return_value is not None
             or self.loop_should_continue
             or self.loop_should_break
         )
