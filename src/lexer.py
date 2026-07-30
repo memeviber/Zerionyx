@@ -197,12 +197,27 @@ class Lexer:
         self.advance()
         is_multiline = False
         closing_sequence = quote_char
+
         if self.current_char == quote_char and self.peek_foward_steps(1) == quote_char:
             is_multiline = True
             closing_sequence = quote_char * 3
             self.advance(2)
+
         escape_character = False
+
         while self.current_char is not None:
+            if escape_character:
+                string_content.append(self.current_char)
+                escape_character = False
+                self.advance()
+                continue
+
+            if self.current_char == "\\":
+                string_content.append("\\")
+                escape_character = True
+                self.advance()
+                continue
+
             if is_multiline:
                 if (
                     self.current_char == quote_char
@@ -212,20 +227,15 @@ class Lexer:
                     self.advance(3)
                     break
             else:
-                if not escape_character and self.current_char == quote_char:
+                if self.current_char == quote_char:
                     self.advance()
                     break
-            if escape_character:
-                string_content.append(self.current_char)
-                escape_character = False
-            elif self.current_char == "\\":
-                string_content.append("\\")
-                escape_character = True
-            else:
-                string_content.append(self.current_char)
+
+            string_content.append(self.current_char)
             self.advance()
         else:
             return None, ExpectedCharError(pos_start, self.pos, f"'{closing_sequence}'")
+
         raw_string = "".join(string_content)
         try:
             processed_string = raw_string.encode("raw_unicode_escape").decode(
@@ -233,8 +243,9 @@ class Lexer:
             )
         except UnicodeDecodeError:
             return None, IllegalCharError(
-                pos_start, self.pos, f"Invalid escape sequence in string"
+                pos_start, self.pos, "Invalid escape sequence in string"
             )
+
         return Token(TT_STRING, processed_string, pos_start, self.pos), None
 
     def peek_foward_steps(self, steps) -> str | None:

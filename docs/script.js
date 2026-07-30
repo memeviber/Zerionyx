@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('click', (e) => {
-            if (sidebar.classList.contains('active') && 
-                !sidebar.contains(e.target) && 
+            if (sidebar.classList.contains('active') &&
+                !sidebar.contains(e.target) &&
                 !navToggle.contains(e.target)) {
                 sidebar.classList.remove('active');
             }

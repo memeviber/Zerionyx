@@ -5,7 +5,7 @@
 **/*.vsix
 **/pypy*/
 **/.venv/
-**/Zerionyx-*/
+**/..ruff_cache/
 **/*.zip
 **/*.tar.gz
 **/*.tar

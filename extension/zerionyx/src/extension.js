@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
+const MiniLexer = require('./lexer');
 
 const zerionyxKeywords = [
     'load', 'namespace', 'done', 'defun', 'using', 'parent',
@@ -58,12 +59,15 @@ const libraryConstants = {
 };
 
 function stripCommentsAndStrings(code) {
-    let cleanCode = code.replace(/#.*/g, "");
-    cleanCode = cleanCode.replace(/"""[\s\S]*?"""/g, "");
-    cleanCode = cleanCode.replace(/'''[\s\S]*?'''/g, "");
-    cleanCode = cleanCode.replace(/"([^"\\]|\\.)*"/g, "");
-    cleanCode = cleanCode.replace(/'([^'\\]|\\.)*'/g, "");
-    return cleanCode;
+    const lexer = new MiniLexer(code);
+    const tokens = lexer.tokenize();
+    return tokens.map(tok => {
+        if (tok.type === 'CODE') {
+            return tok.value;
+        } else {
+            return tok.value.replace(/[^\n]/g, ' ');
+        }
+    }).join('');
 }
 
 class Scope {

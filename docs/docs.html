@@ -18,7 +18,7 @@
                 <a href="index.html">Zeriony<span>x</span></a>
             </div>
             <button class="nav-toggle" aria-label="Toggle navigation">&#9776;</button>
-            
+
         </div>
     </header>
 
@@ -266,12 +266,12 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <h4>Type Representations (Strings)</h4>
                     <p>These constants are string values that correspond to the output of the <code>type()</code>
                         function. They are useful for type checking.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">if</span> <span class="zyx-func">type</span><span class="zyx-types">([</span><span class="zyx-number">1</span><span class="zyx-types">,</span> <span class="zyx-number">2</span><span class="zyx-types">])</span> <span class="zyx-types">==</span> <span class="zyx-var">list</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"It's a list!"</span><span class="zyx-types">)</span>
 <span class="zyx-keyword">done</span>
 <span class="zyx-comment"># Output: It's a list!</span></code></pre>
-                    
+
                     <ul>
                         <li><b>list</b> &rarr; <code>"&lt;list&gt;"</code></li>
                         <li><b>str</b> &rarr; <code>"&lt;str&gt;"</code></li>
@@ -348,7 +348,8 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                             in
                             <code>hm</code>
                         </li>
-                        <li><b>get(hm_or_lst, key_or_idx, default=none)</b> &rarr; any &mdash; Return value for <code>hm_or_lst</code> or
+                        <li><b>get(hm_or_lst, key_or_idx, default=none)</b> &rarr; any &mdash; Return value for
+                            <code>hm_or_lst</code> or
                             <code>default</code>
                             if not found
                         </li>
@@ -420,7 +421,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                         help organize code and prevent name conflicts, especially when building libraries.</p>
                     <p>You can define a namespace using the <code>namespace ... done</code> block. Members inside the
                         namespace are accessed using dot notation (<code>.</code>).</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-comment"># Define a namespace to group math-related utilities</span>
 <span class="zyx-keyword">namespace</span> <span class="zyx-var">math_utils</span>
     <span class="zyx-var">pi</span> <span class="zyx-types">=</span> <span class="zyx-number">3.14159</span>
@@ -437,7 +438,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"The area is "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">area</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: The area is 314.159</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Pi value: "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">math_utils</span class="zyxpan><span class="zyx-types">.</span><span class="zyx-var">pi</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: Pi value: 3.14159</span>
 </code></pre>
-                    
+
                     <div class="note"
                         style="border-left: 5px solid var(--neon-blue); padding: 10px; background: rgba(0, 255, 204, 0.1); margin: 20px 0;">
                         <strong>💡 Immutable Namespaces:</strong>
@@ -456,7 +457,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <p>Conditional logic is handled using <code>if</code>, <code>elif</code>, and <code>else</code>
                         statements. Each block of code to be executed is introduced by the <code>do</code> keyword and
                         the entire structure is terminated by <code>done</code>.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">score</span> <span class="zyx-types">=</span> <span class="zyx-number">85</span>
 
 <span class="zyx-keyword">if</span> <span class="zyx-var">score</span> <span class="zyx-types">>=</span> <span class="zyx-number">90</span> <span class="zyx-keyword">do</span>
@@ -473,10 +474,10 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                 <section id="ref-loops">
                     <h3>Loops</h3>
                     <p>Zerionyx provides three types of loops.</p>
-                    
+
                     <h4>While Loop</h4>
                     <p>Executes a code block if a condition is true.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-comment"># Prints numbers from 0 to 4</span>
 <span class="zyx-var">count</span> <span class="zyx-types">=</span> <span class="zyx-number">0</span>
 <span class="zyx-keyword">while</span> <span class="zyx-var">count</span> <span class="zyx-types">&lt;</span> <span class="zyx-number">5</span> <span class="zyx-keyword">do</span>
@@ -484,10 +485,10 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
     <span class="zyx-var">count</span> <span class="zyx-types">=</span> <span class="zyx-var">count</span> <span class="zyx-types">+</span> <span class="zyx-number">1</span>
 <span class="zyx-keyword">done</span>
 </code></pre>
-                    
+
                     <h4>For Loop (Numeric Range)</h4>
                     <p>Iterates over a range of numbers.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-comment"># Prints numbers from 0 to 10</span>
 <span class="zyx-keyword">for</span> <span class="zyx-var">i</span> <span class="zyx-keyword">to</span> <span class="zyx-number">10</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">i</span><span class="zyx-types">)</span>
@@ -508,10 +509,10 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">j</span><span class="zyx-types">)</span>
 <span class="zyx-keyword">done</span>
 </code></pre>
-                    
+
                     <h4>For-In Loop (Iterator)</h4>
                     <p>Iterates over the elements of an iterable like a list or string.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">fruits</span> <span class="zyx-types">=</span> <span class="zyx-types">[</span><span class="zyx-string">"apple"</span><span class="zyx-types">,</span> <span class="zyx-string">"banana"</span><span class="zyx-types">,</span> <span class="zyx-string">"cherry"</span><span class="zyx-types">]</span>
 <span class="zyx-keyword">for</span> <span class="zyx-var">fruit</span> <span class="zyx-keyword">in</span> <span class="zyx-var">fruits</span> <span class="zyx-keyword">do</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"I like "</span> <span class="zyx-types">+</span> <span class="zyx-var">fruit</span><span class="zyx-types">)</span>
@@ -521,7 +522,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 <span class="zyx-comment"># I like banana</span>
 <span class="zyx-comment"># I like cherry</span>
 </code></pre>
-                    
+
                     <p>The <code>break</code> statement can be used to exit a loop immediately, and
                         <code>continue</code> skips to the next iteration.
                     </p>
@@ -531,13 +532,13 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <h3>Functions</h3>
                     <p>Functions are defined with the <code>defun</code> keyword. They can accept parameters and also
                         support default values.</p>
-                    
+
                     <h4>Function</h4>
                     <p>
                         A function is a reusable block of code that can be called with arguments to perform
                         specific operations.
                     </p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">defun</span> <span class="zyx-func-def">greet</span><span class="zyx-types">(</span><span class="zyx-var">name</span><span class="zyx-types">=</span><span class="zyx-string">"World"</span><span class="zyx-types">)</span>
     <span class="zyx-keyword">return</span> <span class="zyx-string">"Hello, "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">name</span><span class="zyx-types">)</span> <span class="zyx-types">+</span> <span class="zyx-string">"!"</span>
 <span class="zyx-keyword">done</span>
@@ -545,10 +546,10 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-func">greet</span><span class="zyx-types">(</span><span class="zyx-string">"Zerionyx"</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: Hello, Zerionyx!</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-func">greet</span><span class="zyx-types">())</span>           <span class="zyx-comment"># Output: Hello, World!</span>
 </code></pre>
-                    
+
                     <h4>Anonymous and One-Line Functions</h4>
                     <p>Functions can also be defined on a single line, and can be anonymous (without a name).</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-comment"># One-line function</span>
 <span class="zyx-keyword">defun</span> <span class="zyx-func-def">sqrt</span><span class="zyx-types">(</span><span class="zyx-var">x</span><span class="zyx-types">)</span> <span class="zyx-types">-></span> <span class="zyx-var">x</span> <span class="zyx-types">^</span> <span class="zyx-number">0.5</span>
 
@@ -561,7 +562,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <p>Decorators modify or enhance functions using the <code>&</code> symbol before the function
                         definition. A decorator is a function that takes another function and returns a new, modified
                         function.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"libs.decorators"</span>
 
 <span class="zyx-comment"># &decorators.once ensures this function only runs its body the first time it's called</span>
@@ -581,14 +582,15 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                         global scope rather than creating a new local variable. This allows a function
                         to read from and modify a global variable directly.
                     </p>
-                    
+
 
                     <h4>using:</h4>
                     <p>
-                        When you need a function to modify a variable that exists in the global scope, <code>using</code> creates a direct, writable link to that original
+                        When you need a function to modify a variable that exists in the global scope,
+                        <code>using</code> creates a direct, writable link to that original
                         variable. This brings the name into the local scope for easy access.
                     </p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">is_running</span> <span class="zyx-types">=</span> <span class="zyx-var">true</span>
 
 <span class="zyx-keyword">defun</span> <span class="zyx-func-def">stop_application</span><span class="zyx-types">()</span>
@@ -602,16 +604,16 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"App is running: "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">is_running</span><span class="zyx-types">))</span> <span class="zyx-comment"># Output: App is running: false</span>
 </code></pre>
-                    
+
                     <h4>using parent:</h4>
-                        <p>
-                            The <code>using parent</code> statement is used inside nested functions.
-                            It binds a variable reference to the immediate parent function&rsquo;s
-                                scope,
-                            similar to Python&rsquo;s <code>nonlocal</code> keyword.
-                        </p>
-                        
-                        <pre><code class="highlight-Zerionyx"><span class="zyx-var">x</span> <span class="zyx-types">=</span> <span class="zyx-number">2</span> <span class="zyx-comment"># Global variable</span>
+                    <p>
+                        The <code>using parent</code> statement is used inside nested functions.
+                        It binds a variable reference to the immediate parent function&rsquo;s
+                        scope,
+                        similar to Python&rsquo;s <code>nonlocal</code> keyword.
+                    </p>
+
+                    <pre><code class="highlight-Zerionyx"><span class="zyx-var">x</span> <span class="zyx-types">=</span> <span class="zyx-number">2</span> <span class="zyx-comment"># Global variable</span>
 
 <span class="zyx-keyword">defun</span> <span class="zyx-func-def">outer</span><span class="zyx-types">()</span>
     <span class="zyx-var">x</span> <span class="zyx-types">=</span> <span class="zyx-number">0</span> <span class="zyx-comment"># Local variable, shadows the global 'x'</span>
@@ -634,15 +636,15 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <h3>Vargs and Kwargs</h3>
                     <p>Zerionyx supports functions that can accept a variable number of arguments using special syntax
                         in the parameter list.</p>
-                    
+
                     <h4>Vargs (<code>*args</code>)</h4>
                     <p>A parameter prefixed with a single asterisk (<code>*</code>) will collect all extra positional
                         arguments into a list. This is often called "vargs" or "star-args".</p>
-                    
+
                     <h4>Kwargs (<code>**kwargs</code>)</h4>
                     <p>A parameter prefixed with a double asterisk (<code>**</code>) will collect all extra keyword
                         arguments into a HashMap. This is commonly known as "kwargs".</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">defun</span> <span class="zyx-func-def">show_details</span><span class="zyx-types">(</span><span class="zyx-var">name</span><span class="zyx-types">,</span> <span class="zyx-types">*</span><span class="zyx-var">scores</span><span class="zyx-types">,</span> <span class="zyx-types">**</span><span class="zyx-var">details</span><span class="zyx-types">)</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Name: "</span> <span class="zyx-types">+</span> <span class="zyx-var">name</span><span class="zyx-types">)</span>
     <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Scores (Vargs): "</span> <span class="zyx-types">+</span> <span class="zyx-func">to_str</span><span class="zyx-types">(</span><span class="zyx-var">scores</span><span class="zyx-types">))</span>
@@ -667,7 +669,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                         <li><code>print(value)</code>: Prints the value without a newline</li>
                         <li><code>input(prompt)</code>: Displays a prompt and returns the user's input as a string</li>
                     </ul>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">name</span> <span class="zyx-types">=</span> <span class="zyx-func">input</span><span class="zyx-types">(</span><span class="zyx-string">"Enter your name: "</span><span class="zyx-types">)</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-string">"Hello, "</span> <span class="zyx-types">+</span> <span class="zyx-var">name</span><span class="zyx-types">)</span>
 </code></pre>
@@ -678,7 +680,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <p>Zerionyx uses a "panic" system for errors. Instead of traditional try-catch blocks, you can
                         safely execute a function using the <code>is_panic</code> built-in. It returns a list indicating
                         success or failure.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">defun</span> <span class="zyx-func-def">divide</span><span class="zyx-types">(</span><span class="zyx-var">a</span><span class="zyx-types">,</span> <span class="zyx-var">b</span><span class="zyx-types">)</span>
     <span class="zyx-keyword">if</span> <span class="zyx-var">b</span> <span class="zyx-types">==</span> <span class="zyx-number">0</span> <span class="zyx-keyword">do</span>
         <span class="zyx-func">panic</span><span class="zyx-types">(</span><span class="zyx-string">"Can't divide by zero!"</span><span class="zyx-types">,</span> <span class="zyx-string">"M"</span><span class="zyx-types">)</span> <span class="zyx-comment"># "M" for Math Error</span>
@@ -703,7 +705,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                 <section id="ref-file-handling">
                     <h3>File Handling</h3>
                     <p>File operations are managed through the <code>ffio</code> standard library.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"libs.ffio"</span>
 
 <span class="zyx-var">filename</span> <span class="zyx-types">=</span> <span class="zyx-string">"greetings.txt"</span>
@@ -727,7 +729,14 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                         <li><b>Indexing</b>: Use the <code>$</code> operator to get a character at a specific index
                             <code>"hello"$1</code> results in <code>"e"</code>
                         </li>
+                        <li><b>Multiline Strings</b>: You can define strings that span multiple lines using triple
+                            quotes (either <code>"""..."""</code> or <code>'''...'''</code>).</li>
                     </ul>
+
+                    <pre><code class="highlight-Zerionyx"><span class="zyx-var">message</span> <span class="zyx-types">=</span> <span class="zyx-string">"""Hello from Zerionyx!
+This is a multiline string
+that spans across multiple lines."""</span></code></pre>
+
                     <p>For more advanced functions like splitting, joining, and replacing, use the <code>string</code>
                         library.</p>
                 </section>
@@ -766,20 +775,20 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <h3>Assignment to Lists and HashMaps</h3>
                     <p>The <code>$</code> operator is not only used for accessing elements but also for assigning or
                         updating values at a specific index in a list or a key in a HashMap.</p>
-                    
+
                     <h4>List Assignment</h4>
                     <p>You can change the value at a specific index of a list.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">nums</span> <span class="zyx-types">=</span> <span class="zyx-types">[</span><span class="zyx-number">1</span><span class="zyx-types">,</span> <span class="zyx-number">2</span><span class="zyx-types">,</span> <span class="zyx-number">3</span><span class="zyx-types">,</span> <span class="zyx-number">4</span><span class="zyx-types">,</span> <span class="zyx-number">5</span><span class="zyx-types">]</span>
 <span class="zyx-var">nums</span><span class="zyx-types">$</span><span class="zyx-number">1</span> <span class="zyx-types">=</span> <span class="zyx-number">99</span> <span class="zyx-comment"># Update the value at index 1</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">nums</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: [1, 99, 3, 4, 5]</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">nums</span><span class="zyx-types">$</span><span class="zyx-number">1</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: 99</span>
 </code></pre>
-                    
+
                     <h4>HashMap Assignment</h4>
                     <p>You can add a new key-value pair or update an existing one. This is particularly useful when
                         building complex structures like a list of hashmaps.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">users</span> <span class="zyx-types">=</span> <span class="zyx-types">[]</span>
 <span class="zyx-func">append</span><span class="zyx-types">(</span><span class="zyx-var">users</span><span class="zyx-types">,</span> <span class="zyx-types">{})</span> <span class="zyx-comment"># Add an empty hashmap to the list</span>
 
@@ -819,7 +828,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     </p>
                     <p>Use <code>to_cfloat(value)</code> to create a CFloat. They support all standard arithmetic
                         operations.</p>
-                    
+
                     <pre><code class="highlight-Zerionyx"><span class="zyx-var">a</span> <span class="zyx-types">=</span> <span class="zyx-func">to_cfloat</span><span class="zyx-types">(</span><span class="zyx-string">"0.1"</span><span class="zyx-types">)</span>
 <span class="zyx-var">b</span> <span class="zyx-types">=</span> <span class="zyx-func">to_cfloat</span><span class="zyx-types">(</span><span class="zyx-string">"0.2"</span><span class="zyx-types">)</span>
 <span class="zyx-var">result</span> <span class="zyx-types">=</span> <span class="zyx-var">a</span> <span class="zyx-types">+</span> <span class="zyx-var">b</span>
@@ -839,14 +848,14 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <h4>Packing</h4>
                     <p>Use the <code>-p</code> flag to create a <b>.zex</b> file from a main script and related
                         files:</p>
-                    
+
                     <pre><code class="highlight-Zerionyx">python zerionyx.py -p <span class="zyx-string">output.zex</span> <span class="zyx-var">main.zyx</span> <span class="zyx-comment">file1.txt file2.zyx</span></code></pre>
-                    
+
                     <h4>Running</h4>
                     <p>You can execute a <b>.zex</b> file just like a regular <b>.zyx</b> file:</p>
-                    
+
                     <pre><code class="highlight-Zerionyx">python zerionyx.py <span class="zyx-string">output.zex</span></code></pre>
-                    
+
                     <h4>Technical Features</h4>
                     <ul>
                         <li><b>Portability</b>: Automatically extracts to a temporary directory and cleans up after
@@ -1242,7 +1251,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                     <ul>
                         <li><b>parse(s)</b> &rarr; any &mdash; Parse JSON string <code>s</code> to Zerionyx object</li>
                         <li><b>stringify(o)</b> &rarr; str
-                             &mdash; Convert <code>o</code> to JSON string
+                            &mdash; Convert <code>o</code> to JSON string
                         </li>
                     </ul>
                 </div>
@@ -1317,7 +1326,8 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 
     <footer>
         <div class="container">
-            Zerionyx &copy; 2025&mdash;2026 MemeViber &mdash; <a href="https://github.com/memeviber/Zerionyx" target="_blank">View on
+            Zerionyx &copy; 2025&mdash;2026 MemeViber &mdash; <a href="https://github.com/memeviber/Zerionyx"
+                target="_blank">View on
                 GitHub</a>
         </div>
     </footer>

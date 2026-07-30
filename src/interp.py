@@ -3348,7 +3348,7 @@ class BuiltInFunction(BaseFunction):
                     exec_ctx,
                 )
             )
-        
+
         found = key.value in hm.value
         return RTResult().success(Number.true if found else Number.false)
 
