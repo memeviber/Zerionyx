@@ -25,7 +25,7 @@
 - [Looking for Contributors](#looking-for-contributors)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
-- [Additional Notice & Credits](#additional-notice-credits)
+- [Additional Notice & Credits](#additional-notice--credits)
 - [Contact](#contact)
 
 ---
