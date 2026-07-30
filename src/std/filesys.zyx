@@ -40,7 +40,6 @@ namespace filesys
 
     defun list_dir(dir=".")
         return list_dir_fp(dir)
-        return none
     done
 
     defun make_dir(d)
