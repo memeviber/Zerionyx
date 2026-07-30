@@ -1,6 +1,6 @@
-# libs.ffio (File Folder I/O)
+# std.filesys
 
-namespace ffio
+namespace filesys
     os_sep = os_sep_fp
 
     defun write(f, m, t)

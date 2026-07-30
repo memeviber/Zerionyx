@@ -1,6 +1,6 @@
-load "libs.sys"
-load "libs.string"
-load "libs.listm"
+load "std.sys"
+load "std.string"
+load "std.listm"
 
 defun pass() -> none
 

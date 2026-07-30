@@ -63,7 +63,7 @@
                 <li><a href="#lib-listm">listm</a></li>
                 <li><a href="#lib-string">string</a></li>
                 <li><a href="#lib-math">math</a></li>
-                <li><a href="#lib-ffio">ffio</a></li>
+                <li><a href="#lib-filesys">filesys</a></li>
                 <li><a href="#lib-hash">hash</a></li>
                 <li><a href="#lib-memory">memory</a></li>
                 <li><a href="#lib-net">net</a></li>
@@ -563,7 +563,7 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                         definition. A decorator is a function that takes another function and returns a new, modified
                         function.</p>
 
-                    <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"libs.decorators"</span>
+                    <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"std.decorators"</span>
 
 <span class="zyx-comment"># &decorators.once ensures this function only runs its body the first time it's called</span>
 <span class="zyx-keyword">&</span><span class="zyx-var">decorators</span><span class="zyx-types">.</span><span class="zyx-func">once</span>
@@ -704,18 +704,18 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
 
                 <section id="ref-file-handling">
                     <h3>File Handling</h3>
-                    <p>File operations are managed through the <code>ffio</code> standard library.</p>
+                    <p>File operations are managed through the <code>filesys</code> standard library.</p>
 
-                    <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"libs.ffio"</span>
+                    <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"std.filesys"</span>
 
 <span class="zyx-var">filename</span> <span class="zyx-types">=</span> <span class="zyx-string">"greetings.txt"</span>
 <span class="zyx-var">content</span> <span class="zyx-types">=</span> <span class="zyx-string">"Hello from Zerionyx!"</span>
 
 <span class="zyx-comment"># Write to a file</span>
-<span class="zyx-var">ffio</span><span class="zyx-types">.</span><span class="zyx-func">write</span><span class="zyx-types">(</span><span class="zyx-var">filename</span><span class="zyx-types">,</span> <span class="zyx-string">"w"</span><span class="zyx-types">,</span> <span class="zyx-var">content</span><span class="zyx-types">)</span>
+<span class="zyx-var">filesys</span><span class="zyx-types">.</span><span class="zyx-func">write</span><span class="zyx-types">(</span><span class="zyx-var">filename</span><span class="zyx-types">,</span> <span class="zyx-string">"w"</span><span class="zyx-types">,</span> <span class="zyx-var">content</span><span class="zyx-types">)</span>
 
 <span class="zyx-comment"># Read from a file</span>
-<span class="zyx-var">read_content</span> <span class="zyx-types">=</span> <span class="zyx-var">ffio</span><span class="zyx-types">.</span><span class="zyx-func">read</span><span class="zyx-types">(</span><span class="zyx-var">filename</span><span class="zyx-types">,</span> <span class="zyx-string">"r"</span><span class="zyx-types">)</span>
+<span class="zyx-var">read_content</span> <span class="zyx-types">=</span> <span class="zyx-var">filesys</span><span class="zyx-types">.</span><span class="zyx-func">read</span><span class="zyx-types">(</span><span class="zyx-var">filename</span><span class="zyx-types">,</span> <span class="zyx-string">"r"</span><span class="zyx-types">)</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">read_content</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: Hello from Zerionyx!</span>
 </code></pre>
                 </section>
@@ -813,7 +813,7 @@ that spans across multiple lines."""</span></code></pre>
                         <li><b>Operations</b>: Supports concatenation (<code>+</code>) and indexing (<code>$</code>)
                         </li>
                     </ul>
-                    <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"libs.hash"</span>
+                    <pre><code class="highlight-Zerionyx"><span class="zyx-keyword">load</span> <span class="zyx-string">"std.hash"</span>
 <span class="zyx-var">data</span> <span class="zyx-types">=</span> <span class="zyx-func">to_bytes</span><span class="zyx-types">(</span><span class="zyx-string">"my secret data"</span><span class="zyx-types">)</span>
 <span class="zyx-var">hashed_data</span> <span class="zyx-types">=</span> <span class="zyx-var">hash</span><span class="zyx-types">.</span><span class="zyx-func">sha256</span><span class="zyx-types">(</span><span class="zyx-var">data</span><span class="zyx-types">)</span>
 <span class="zyx-func">println</span><span class="zyx-types">(</span><span class="zyx-var">hashed_data</span><span class="zyx-types">)</span> <span class="zyx-comment"># Output: 323665373063323064...</span>
@@ -875,8 +875,8 @@ that spans across multiple lines."""</span></code></pre>
             <section id="standard-library">
                 <h2>Standard Library</h2>
                 <p>
-                    To use a library, add <code>load "libs.&lt;name&gt;"</code> at the top of your <b>.zyx</b> file.
-                    For example: <code>load "libs.math"</code>.
+                    To use a library, add <code>load "std.&lt;name&gt;"</code> at the top of your <b>.zyx</b> file.
+                    For example: <code>load "std.math"</code>.
                 </p>
 
                 <p>
@@ -891,7 +891,7 @@ that spans across multiple lines."""</span></code></pre>
                 </p>
 
                 <p>
-                    All official libraries under <code>libs.*</code> are already wrapped in their own namespaces.
+                    All official libraries under <code>std.*</code> are already wrapped in their own namespaces.
                     That&rsquo;s why you can use them right away, like <code>math.is_prime(314)</code>.
                 </p>
 
@@ -1012,8 +1012,8 @@ that spans across multiple lines."""</span></code></pre>
                         <li>Constants: <b>PI</b>, <b>E</b>, <b>ln2</b></li>
                     </ul>
                 </div>
-                <div id="lib-ffio">
-                    <h3>ffio.zyx (File Folder I/O)</h3>
+                <div id="lib-filesys">
+                    <h3>filesys.zyx</h3>
                     <ul>
                         <li><b>write(file, mode, text)</b> &rarr; none &mdash; Write <code>text</code> to
                             <code>file</code> with

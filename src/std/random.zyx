@@ -1,4 +1,4 @@
-# libs.random
+# std.random
 
 namespace random
     defun rand()

@@ -1,4 +1,4 @@
-# libs.msgbox
+# std.msgbox
 
 namespace msgbox
     defun alert(message, title)

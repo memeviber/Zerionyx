@@ -1,4 +1,4 @@
-# libs.math
+# std.math
 
 namespace math
     PI = PI_fp

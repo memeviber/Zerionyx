@@ -1,4 +1,4 @@
-# libs.keyboard
+# std.keyboard
 
 namespace keyboard
     defun write(t)

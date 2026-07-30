@@ -1,4 +1,4 @@
-# libs.string
+# std.string
 
 namespace string
     digits = "0123456789"

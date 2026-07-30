@@ -5769,9 +5769,9 @@ class Interpreter:
         res = RTResult()
         path = node.file_path
         if not os.path.isfile(path):
-            tmp_path = os.path.join(LIBS_PATH, node.file_path)
+            tmp_path = os.path.join(STD_PATH, node.file_path)
             if os.path.isfile(tmp_path):
-                path = os.path.join(LIBS_PATH, node.file_path)
+                path = os.path.join(STD_PATH, node.file_path)
 
             else:
                 return res.failure(

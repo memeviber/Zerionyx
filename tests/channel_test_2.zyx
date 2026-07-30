@@ -1,6 +1,6 @@
-load "libs.threading"
-load "libs.channel"
-load "libs.time"
+load "std.threading"
+load "std.channel"
+load "std.time"
 
 println("--- Producer/Consumer Demo ---")
 

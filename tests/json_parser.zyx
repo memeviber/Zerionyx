@@ -1,18 +1,18 @@
-load "libs.sys"
-load "libs.ffio"
-load "libs.json"
+load "std.sys"
+load "std.filesys"
+load "std.json"
 
 if len(sys.argv) != 2 do
-    println("Usage: " + ffio.abs_path(sys.argv$0) + " <your-json-file>")
+    println("Usage: " + filesys.abs_path(sys.argv$0) + " <your-json-file>")
     sys.exit(1)
 done
 
-if not ffio.exists(sys.argv$1) do
-    println('File not found: "' + ffio.abs_path(sys.argv$1) + '"')
+if not filesys.exists(sys.argv$1) do
+    println('File not found: "' + filesys.abs_path(sys.argv$1) + '"')
     sys.exit(1)
 done
 
-j = ffio.read(sys.argv$1, "r")
+j = filesys.read(sys.argv$1, "r")
 r = json.parse(j)
 
 println("r = " + to_str(r))

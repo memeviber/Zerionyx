@@ -1,4 +1,4 @@
-# libs.screen
+# std.screen
 
 namespace screen
     defun capture(p)

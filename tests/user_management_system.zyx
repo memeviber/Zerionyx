@@ -1,4 +1,4 @@
-load "libs.hash"
+load "std.hash"
 
 users = []
 current_user = none

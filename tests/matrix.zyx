@@ -1,6 +1,6 @@
-load "libs.random"
-load "libs.sys"
-load "libs.string"
+load "std.random"
+load "std.sys"
+load "std.string"
 
 clear()
 if sys.os_name == "nt" do sys.system("color 02")

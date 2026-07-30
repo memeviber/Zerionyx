@@ -1,4 +1,4 @@
-load "libs.threading"
+load "std.threading"
 
 defun my_func(name) -> "Hello, " + name
 handle = threading.start(my_func, ["World"])

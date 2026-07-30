@@ -1,4 +1,4 @@
-# libs.mouse
+# std.mouse
 
 namespace mouse
     defun move(x, y)

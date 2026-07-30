@@ -1,7 +1,7 @@
-# libs.listm
+# std.listm
 
 namespace listm
-    load "libs.random"
+    load "std.random"
 
     defun map(f, l)
         if type(l) != list do

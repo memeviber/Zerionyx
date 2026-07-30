@@ -1,9 +1,9 @@
-# libs.decorators
+# std.decorators
 
 namespace decorators
-    load "libs.time"
-    load "libs.threading"
-    load "libs.json"
+    load "std.time"
+    load "std.threading"
+    load "std.json"
 
     defun name(fn) -> slice(to_str(fn), 10, -1)
 

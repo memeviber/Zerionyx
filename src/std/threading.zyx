@@ -1,4 +1,4 @@
-# libs.threading
+# std.threading
 
 namespace threading
     defun start(f, args=[], kwargs={})

@@ -1,4 +1,4 @@
-load "libs.decorators"
+load "std.decorators"
 
 &decorators.cache
 defun fib(n)

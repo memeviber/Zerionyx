@@ -1,14 +1,14 @@
-load "libs.sys"
-load "libs.ffio"
-load "libs.csv"
+load "std.sys"
+load "std.filesys"
+load "std.csv"
 
 if len(sys.argv) != 2 do
-    println("Usage: " + ffio.abs_path(sys.argv$0) + " <your-csv-file>")
+    println("Usage: " + filesys.abs_path(sys.argv$0) + " <your-csv-file>")
     sys.exit(1)
 done
 
-if not ffio.exists(sys.argv$1) do
-    println('File not found: "' + ffio.abs_path(sys.argv$1) + '"')
+if not filesys.exists(sys.argv$1) do
+    println('File not found: "' + filesys.abs_path(sys.argv$1) + '"')
     sys.exit(1)
 done
 

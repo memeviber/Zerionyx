@@ -297,7 +297,7 @@ class Parser:
                 raw_path = raw_path[:-1]
             raw_path += ".zyx"
             candidates = []
-            if module.value.startswith("libs."):
+            if module.value.startswith("std."):
                 candidates.append(raw_path)
             elif module.value.startswith("local."):
                 if self.current_tok.pos_start.fn == "<stdin>":
@@ -315,7 +315,7 @@ class Parser:
                     InvalidSyntaxError(
                         self.current_tok.pos_start,
                         self.current_tok.pos_end,
-                        "Paths must start with 'libs.' or 'local.'",
+                        "Paths must start with 'std.' or 'local.'",
                     )
                 )
             chosen_path = None

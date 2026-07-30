@@ -1,7 +1,7 @@
-# libs.termcolor
+# std.termcolor
 
 namespace termcolor
-    load "libs.string"
+    load "std.string"
 
     color_map = {
         "black": 30, "red": 31, "green": 32, "yellow": 33,

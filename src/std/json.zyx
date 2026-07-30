@@ -1,4 +1,4 @@
-# libs.json
+# std.json
 
 namespace json
     defun parse(s)

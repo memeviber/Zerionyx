@@ -1,20 +1,20 @@
-load "libs.ffio"
-load "libs.sys"
-load "libs.string"
-load "libs.termcolor"
+load "std.filesys"
+load "std.sys"
+load "std.string"
+load "std.termcolor"
 
 defun backup_folder(path, cbp, rbp)
-    lf = ffio.list_dir(path)
+    lf = filesys.list_dir(path)
     for i = 0 until len(lf) do
         f = lf$i
-        flp = path + ffio.os_sep + f
-        fbd = cbp + ffio.os_sep + f
+        flp = path + filesys.os_sep + f
+        fbd = cbp + filesys.os_sep + f
         if flp == rbp do
             termcolor.cprintln("Skipping main backup directory itself: " + flp, "yellow", none, none)
             continue
         done
-        if ffio.is_file(flp) do
-            e = is_panic(ffio.copy, [flp, fbd + ".bak"])
+        if filesys.is_file(flp) do
+            e = is_panic(filesys.copy, [flp, fbd + ".bak"])
             
             if is_none(e$1) do
                 termcolor.cprintln("Backup created: " + fbd + ".bak", "green", none, none)
@@ -26,7 +26,7 @@ defun backup_folder(path, cbp, rbp)
                 done
             done
         else do
-            e = is_panic(ffio.make_dir, [fbd])
+            e = is_panic(filesys.make_dir, [fbd])
             if not is_none(e$1) do
                 termcolor.cprintln("Error: Can not make subfolder in backup: " + fbd + " (Reason: " + (e$1) + ")", "red", none, none)
             else do
@@ -42,18 +42,18 @@ defun main()
         sys.exit(1)
     done
     fp = sys.argv$1
-    if not ffio.exists(fp) do 
+    if not filesys.exists(fp) do 
         termcolor.cprintln("Error: Folder does not exist: " + fp, "red", none, none) 
         sys.exit(1)
     done
-    if ffio.is_file(fp) do 
+    if filesys.is_file(fp) do 
         termcolor.cprintln("Error: Path provided is not a folder: " + fp, "red", none, none)
         sys.exit(1)
     done
-    abrp = fp + ffio.os_sep + "backup"
-    emmb = is_panic(ffio.make_dir, [abrp])
+    abrp = fp + filesys.os_sep + "backup"
+    emmb = is_panic(filesys.make_dir, [abrp])
     if not is_none(emmb$1) do
-        if ffio.exists(abrp) and not ffio.is_file(abrp) do
+        if filesys.exists(abrp) and not filesys.is_file(abrp) do
             termcolor.cprintln("Main backup folder already exists (and is a directory): " + abrp, "cyan", none, none)
         else do
             termcolor.cprintln("Error: Can not make main backup folder: " + abrp + " (Reason: " + (emmb$1) + ")", "red", none, none)

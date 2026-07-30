@@ -1,14 +1,14 @@
-load "libs.ffio"
-load "libs.sys"
-load "libs.string"
-load "libs.listm"
-load "libs.termcolor"
+load "std.filesys"
+load "std.sys"
+load "std.string"
+load "std.listm"
+load "std.termcolor"
 
 defun parse_config(config_file)
     parsed_config_data = []
     current_section_name = "__global__"
     current_section_items = []
-    lines = string.split(ffio.read(config_file, "r"), "\n")
+    lines = string.split(filesys.read(config_file, "r"), "\n")
     for i until len(lines) do
         line = lines$i
         if line != "" do
@@ -127,11 +127,11 @@ defun main()
         sys.exit(1)
     done
     config_path = sys.argv$1
-    if not ffio.exists(config_path) do
+    if not filesys.exists(config_path) do
         termcolor.cprintln("Error: File does not exist: " + config_path, 'red', none, 'bold')
         sys.exit(1)
     done
-    if not ffio.is_file(config_path) do
+    if not filesys.is_file(config_path) do
         termcolor.cprintln("Error: Path is not a file: " + config_path, 'red', none, 'bold')
         sys.exit(1)
     done

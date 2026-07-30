@@ -1,4 +1,4 @@
-# libs.hash
+# std.hash
 
 namespace hash
     defun md5(s)

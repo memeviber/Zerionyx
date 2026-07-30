@@ -1,5 +1,5 @@
-load "libs.random"
-load "libs.sys"
+load "std.random"
+load "std.sys"
 
 a = 0
 ma = 10

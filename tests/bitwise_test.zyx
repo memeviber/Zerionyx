@@ -1,4 +1,4 @@
-load "libs.string"
+load "std.string"
 
 defun to_binary(n)
     binary_str = ""

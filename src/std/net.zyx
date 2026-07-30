@@ -1,4 +1,4 @@
-# libs.net
+# std.net
 
 namespace net
     defun get_ip()

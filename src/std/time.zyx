@@ -1,4 +1,4 @@
-# libs.time
+# std.time
 
 namespace time
     defun sleep(s)

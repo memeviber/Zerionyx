@@ -33,7 +33,7 @@ const libraryFunctions = {
     "listm": ["map", "filter", "reduce", "min", "max", "reverse", "zip", "zip_longest", "sort", "count", "index_of", "rand_int_list", "rand_float_list"],
     "string": ["split", "strip", "join", "replace", "to_upper", "to_lower", "ord", "chr", "is_digit", "is_ascii_lowercase", "is_ascii_uppercase", "is_ascii_letter", "is_space", "find", "find_all", "startswith", "endswith", "encode", "decode", "format"],
     "math": ["sqrt", "abs", "fact", "sin", "cos", "tan", "gcd", "lcm", "fib", "is_prime", "deg2rad", "rad2deg", "exp", "log", "sinh", "cosh", "tanh", "round", "is_close"],
-    "ffio": ["write", "read", "exists", "get_cdir", "set_cdir", "list_dir", "make_dir", "remove_file", "rename", "remove_dir", "copy", "is_file", "abs_path", "base_name", "dir_name", "symlink", "readlink", "stat", "lstat", "walk", "chmod", "chown", "utime", "link", "unlink", "access", "path_join", "is_dir", "is_link", "is_mount"],
+    "filesys": ["write", "read", "exists", "get_cdir", "set_cdir", "list_dir", "make_dir", "remove_file", "rename", "remove_dir", "copy", "is_file", "abs_path", "base_name", "dir_name", "symlink", "readlink", "stat", "lstat", "walk", "chmod", "chown", "utime", "link", "unlink", "access", "path_join", "is_dir", "is_link", "is_mount"],
     "hash": ["md5", "sha1", "sha256", "sha512", "crc32"],
     "memory": ["remember", "recall", "forget", "clear_memory", "keys", "is_empty", "size"],
     "net": ["get_ip", "get_mac", "ping", "downl", "get_local_ip", "get_hostname", "request"],
@@ -54,7 +54,7 @@ const libraryFunctions = {
 
 const libraryConstants = {
     "math": ["PI", "E", "ln2"],
-    "ffio": ["os_sep"],
+    "filesys": ["os_sep"],
     "sys": ["argv", "os_name"]
 };
 
@@ -253,7 +253,7 @@ function activate(context) {
             let match;
             while ((match = loadPattern.exec(fullText)) !== null) {
                 let p = match[1];
-                if (p.startsWith("libs.")) {
+                if (p.startsWith("std.")) {
                     stdLibsLoaded.add(p.slice(5));
                 } else if (p.startsWith("local.")) {
                     localFilesToScan.add(p.slice(6));

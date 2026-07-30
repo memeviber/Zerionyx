@@ -1,4 +1,4 @@
-# libs.channel
+# std.channel
 
 namespace channel
     defun new()

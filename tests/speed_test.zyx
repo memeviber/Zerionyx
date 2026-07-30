@@ -1,5 +1,5 @@
-load "libs.time"
-load "libs.sys"
+load "std.time"
+load "std.sys"
 
 N = 1000000
 repeats = 10
