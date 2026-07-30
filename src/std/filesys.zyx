@@ -13,13 +13,13 @@ namespace filesys
 
     defun read(f, m)
         if m != "r" and m != "rb" do
-            panic("Invalid mode for write operation", "IO")
-        done
-        if not exists_fp(f) do
-            panic("File does not exist", "IO")
+            panic("Invalid mode for read operation", "IO")
         done
         if type(f) != str do
             panic("First argument of 'read' must be a string", "T")
+        done
+        if not exists_fp(f) do
+            panic("File does not exist", "IO")
         done
         f_ = open_fp(f)
         return read_fp(f_, m)
@@ -44,6 +44,7 @@ namespace filesys
 
     defun make_dir(d)
         mkdir_fp(d)
+        return none
     done
 
     defun remove_file(f)
@@ -132,8 +133,8 @@ namespace filesys
         return access_fp(p, m)
     done
 
-    defun path_join(a)
-        return path_join_fp(a)
+    defun path_join(*a)
+        return path_join_fp(*a)
     done
 
     defun is_dir(p)

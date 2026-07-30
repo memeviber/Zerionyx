@@ -4576,7 +4576,35 @@ class BuiltInFunction(BaseFunction):
                     exec_ctx,
                 )
             )
-        r = _str.value.format(*lst.value)
+        try:
+            r = _str.value.format(*lst.value)
+        except IndexError:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    "Replacement index out of range for string format template",
+                    exec_ctx,
+                )
+            )
+        except KeyError as e:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    f"Missing keyword argument: {e}",
+                    exec_ctx,
+                )
+            )
+        except ValueError as e:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    f"Value error during string formatting: {e}",
+                    exec_ctx,
+                )
+            )
         return RTResult().success(String(r))
 
     @set_args(["value"])
