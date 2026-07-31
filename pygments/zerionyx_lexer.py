@@ -14,7 +14,7 @@ from pygments.token import (
 class ZerionyxLexer(RegexLexer):
     name = "Zerionyx"
     aliases = ["zerionyx", "zyx"]
-    filenames = ["*.zyx", "*.zex"]
+    filenames = ["*.zyx"]
 
     zyx_keywords = (
         "and",
@@ -25,6 +25,7 @@ class ZerionyxLexer(RegexLexer):
         "else",
         "for",
         "to",
+        "until",
         "do",
         "step",
         "while",
@@ -41,7 +42,7 @@ class ZerionyxLexer(RegexLexer):
         "parent",
     )
 
-    zyx_constants = ("true", "false", "none", "PI", "E", "ln2", "nan", "inf", "neg_inf")
+    zyx_constants = ("true", "false", "none", "nan", "inf", "neg_inf")
 
     zyx_builtins = (
         "println",
