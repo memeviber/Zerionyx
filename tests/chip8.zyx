@@ -141,6 +141,7 @@ namespace chip8
         println("Warning: Avoid holding keys to prevent buffer lag")
         println("Press ESC to exit")
         time.sleep(3.5)
+        clear()
         return none
     done
 
@@ -516,7 +517,7 @@ defun main()
             chip8.render()
         done
         
-        time.sleep(0.0025)
+        time.sleep(0.0001)
     done
     clear()
 done
