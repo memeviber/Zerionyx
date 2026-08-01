@@ -53,16 +53,44 @@ font_set = [
     128, 240, 128, 128
 ]
 
+big_font_set = [
+    255, 255, 195, 195, 195, 195, 195, 195, 255, 255,
+    3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+    255, 255, 3, 3, 255, 255, 192, 192, 255, 255,
+    255, 255, 3, 3, 255, 255, 3, 3, 255, 255,
+    195, 195, 195, 195, 255, 255, 3, 3, 3, 3,
+    255, 255, 192, 192, 255, 255, 3, 3, 255, 255,
+    255, 255, 192, 192, 255, 255, 195, 195, 255, 255,
+    255, 255, 3, 3, 3, 3, 3, 3, 3, 3,
+    255, 255, 195, 195, 255, 255, 195, 195, 255, 255,
+    255, 255, 195, 195, 255, 255, 3, 3, 255, 255,
+    255, 255, 195, 195, 255, 255, 195, 195, 195, 195,
+    252, 252, 195, 195, 252, 252, 195, 195, 252, 252,
+    255, 255, 192, 192, 192, 192, 192, 192, 255, 255,
+    252, 252, 195, 195, 195, 195, 195, 195, 252, 252,
+    255, 255, 192, 192, 252, 252, 192, 192, 255, 255,
+    255, 255, 192, 192, 252, 252, 192, 192, 192, 192
+]
+
 draw_flag = false
 running = true
+
+high_res = false
+RPL = [0] * 8
 
 
 namespace chip8
     defun init_display()
-        using display, draw_flag
+        using display, draw_flag, high_res
         display = []
-        for r = 0 until 32 do
-            append(display, [0] * 64)
+        rows = 32
+        cols = 64
+        if high_res do
+            rows = 64
+            cols = 128
+        done
+        for r = 0 until rows do
+            append(display, [0] * cols)
         done
         draw_flag = true
         return none
@@ -72,6 +100,9 @@ namespace chip8
         using memory
         for i = 0 until len(font_set) do
             memory$i = font_set$i
+        done
+        for i = 0 until len(big_font_set) do
+            memory$(80 + i) = big_font_set$i
         done
         return none
     done
@@ -114,12 +145,20 @@ namespace chip8
     done
 
     defun draw(vx, vy, h)
-        using memory, display, I, draw_flag
+        using memory, display, I, draw_flag, high_res
+        
         collision = false
         sprite = slice(memory, I, I + h, none)
         
-        x_start = vx % 64
-        y_start = vy % 32
+        cols = 64
+        rows = 32
+        if high_res do
+            cols = 128
+            rows = 64
+        done
+        
+        x_start = vx % cols
+        y_start = vy % rows
         
         for i = 0 until h do
             byte_val = sprite$i
@@ -129,7 +168,7 @@ namespace chip8
                 target_x = x_start + j
                 target_y = y_start + i
                 
-                if target_x < 64 and target_y < 32 do
+                if target_x < cols and target_y < rows do
                     current_pixel = display$target_y$target_x
                     if current_pixel == 1 and bit == 1 do
                         collision = true
@@ -140,6 +179,85 @@ namespace chip8
         done
         draw_flag = true
         return collision
+    done
+
+    defun draw_16x16(vx, vy)
+        using memory, display, I, draw_flag, high_res
+        
+        collision = false
+        sprite = slice(memory, I, I + 32, none)
+        
+        cols = 64
+        rows = 32
+        if high_res do
+            cols = 128
+            rows = 64
+        done
+        
+        x_start = vx % cols
+        y_start = vy % rows
+        
+        for i = 0 until 16 do
+            b1 = sprite$(i * 2)
+            b2 = sprite$(i * 2 + 1)
+            word_val = bitwise_or(shl(b1, 8), b2)
+            
+            for j = 0 until 16 do
+                bit = bitwise_and(shr(word_val, 15 - j), 1)
+                
+                target_x = x_start + j
+                target_y = y_start + i
+                
+                if target_x < cols and target_y < rows do
+                    current_pixel = display$target_y$target_x
+                    if current_pixel == 1 and bit == 1 do
+                        collision = true
+                    done
+                    display$target_y$target_x = bitwise_xor(current_pixel, bit)
+                done
+            done
+        done
+        draw_flag = true
+        return collision
+    done
+
+    defun scroll_down(lines)
+        using display, draw_flag
+        res = pyexec("""
+rows = len(display)
+cols = len(display[0])
+new_display = [[0] * cols for _ in range(lines)] + display[:rows - lines]
+result = new_display
+""", {"display": display, "lines": lines})
+        display = res$"result"
+        draw_flag = true
+        return none
+    done
+
+    defun scroll_right()
+        using display, draw_flag
+        res = pyexec("""
+new_display = []
+for row in display:
+    new_display.append([0, 0, 0, 0] + row[:-4])
+result = new_display
+""", {"display": display})
+        display = res$"result"
+        draw_flag = true
+        return none
+    done
+
+    defun scroll_left()
+        using display, draw_flag
+        res = pyexec("""
+new_display = []
+for row in display:
+    new_display.append(row[4:] + [0, 0, 0, 0])
+result = new_display
+""", {"display": display})
+        display = res$"result"
+        draw_flag = true
+        return none
     done
 
     defun render()
@@ -161,7 +279,7 @@ result = "\\n".join(output_list)
     done
 
     defun step_cycle()
-        using memory, PC, V, I, SP, stack, delay_timer, sound_timer, keys
+        using memory, PC, V, I, SP, stack, delay_timer, sound_timer, keys, high_res, RPL
         
         b1 = memory$PC
         b2 = memory$(PC + 1)
@@ -180,6 +298,18 @@ result = "\\n".join(output_list)
             elif opcode == 238 do
                 PC = pop(stack, len(stack) - 1)
                 return none
+            elif opcode == 254 do
+                high_res = false
+                init_display()
+            elif opcode == 255 do
+                high_res = true
+                init_display()
+            elif opcode == 251 do
+                scroll_right()
+            elif opcode == 252 do
+                scroll_left()
+            elif bitwise_and(opcode, 240) == 192 do
+                scroll_down(n)
             done
         
         elif nibble_1 == 1 do
@@ -217,13 +347,10 @@ result = "\\n".join(output_list)
                 V$x = V$y
             elif n == 1 do
                 V$x = bitwise_or(V$x, V$y)
-                V$15 = 0
             elif n == 2 do
                 V$x = bitwise_and(V$x, V$y)
-                V$15 = 0
             elif n == 3 do
                 V$x = bitwise_xor(V$x, V$y)
-                V$15 = 0
             elif n == 4 do
                 val = V$x + V$y
                 V$x = val % 256
@@ -241,8 +368,8 @@ result = "\\n".join(output_list)
                 V$x = (val + 256) % 256
                 V$15 = borrow
             elif n == 6 do
-                least_bit = bitwise_and(V$y, 1)
-                V$x = shr(V$y, 1)
+                least_bit = bitwise_and(V$x, 1)
+                V$x = shr(V$x, 1)
                 V$15 = least_bit
             elif n == 7 do
                 val = V$y - V$x
@@ -253,8 +380,8 @@ result = "\\n".join(output_list)
                 V$x = (val + 256) % 256
                 V$15 = borrow
             elif n == 14 do
-                most_bit = bitwise_and(shr(V$y, 7), 1)
-                V$x = bitwise_and(shl(V$y, 1), 255)
+                most_bit = bitwise_and(shr(V$x, 7), 1)
+                V$x = bitwise_and(shl(V$x, 1), 255)
                 V$15 = most_bit
             done
             
@@ -267,14 +394,18 @@ result = "\\n".join(output_list)
             I = nnn
             
         elif nibble_1 == 11 do
-            PC = V$0 + nnn
+            PC = (V$x + nnn) % 4096
             return none
             
         elif nibble_1 == 12 do
             V$x = bitwise_and(random.rand_int(0, 255), nn)
             
         elif nibble_1 == 13 do
+            if n == 0 do
+                collision = draw_16x16(V$x, V$y)
+            else do
             collision = draw(V$x, V$y, n)
+            done
             if collision do
                 V$15 = 1
             else do
@@ -317,6 +448,8 @@ result = "\\n".join(output_list)
                 I += V$x
             elif nn == 41 do
                 I = V$x * 5
+            elif nn == 48 do
+                I = 80 + (V$x * 10)
             elif nn == 51 do
                 val = V$x
                 memory$I = val // 100
@@ -326,12 +459,20 @@ result = "\\n".join(output_list)
                 for reg_idx = 0 to x do
                     memory$(I + reg_idx) = V$reg_idx
                 done
-                I += x + 1
             elif nn == 101 do
                 for reg_idx = 0 to x do
                     V$reg_idx = memory$(I + reg_idx)
                 done
-                I += x + 1
+            elif nn == 117 do
+                limit = if x > 7 do 7 else do x
+                for r_idx = 0 to limit do
+                    RPL$r_idx = V$r_idx
+                done
+            elif nn == 133 do
+                limit = if x > 7 do 7 else do x
+                for r_idx = 0 to limit do
+                    V$r_idx = RPL$r_idx
+                done
             done
         done
 
@@ -358,6 +499,7 @@ defun main()
     rom_path = sys.argv$1
     
     clear()
+    
     threading.start(keyboard_worker)
     chip8.init_display()
     chip8.load_font_set()
