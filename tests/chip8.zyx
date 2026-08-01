@@ -117,17 +117,25 @@ namespace chip8
         using memory, display, I, draw_flag
         collision = false
         sprite = slice(memory, I, I + h, none)
+        
+        x_start = vx % 64
+        y_start = vy % 32
+        
         for i = 0 until h do
             byte_val = sprite$i
             for j = 0 until 8 do
                 bit = bitwise_and(shr(byte_val, 7 - j), 1)
-                target_y = (vy + i) % 32
-                target_x = (vx + j) % 64
-                current_pixel = display$target_y$target_x
-                if current_pixel == 1 and bit == 1 do
-                    collision = true
+                
+                target_x = x_start + j
+                target_y = y_start + i
+                
+                if target_x < 64 and target_y < 32 do
+                    current_pixel = display$target_y$target_x
+                    if current_pixel == 1 and bit == 1 do
+                        collision = true
+                    done
+                    display$target_y$target_x = bitwise_xor(current_pixel, bit)
                 done
-                display$target_y$target_x = bitwise_xor(current_pixel, bit)
             done
         done
         draw_flag = true
@@ -209,10 +217,13 @@ result = "\\n".join(output_list)
                 V$x = V$y
             elif n == 1 do
                 V$x = bitwise_or(V$x, V$y)
+                V$15 = 0
             elif n == 2 do
                 V$x = bitwise_and(V$x, V$y)
+                V$15 = 0
             elif n == 3 do
                 V$x = bitwise_xor(V$x, V$y)
+                V$15 = 0
             elif n == 4 do
                 val = V$x + V$y
                 V$x = val % 256
@@ -223,27 +234,27 @@ result = "\\n".join(output_list)
                 done
             elif n == 5 do
                 val = V$x - V$y
+                borrow = 1
                 if val < 0 do
-                    V$15 = 0
-                else do
-                    V$15 = 1
+                    borrow = 0
                 done
                 V$x = (val + 256) % 256
+                V$15 = borrow
             elif n == 6 do
-                least_bit = bitwise_and(V$x, 1)
-                V$x = shr(V$x, 1)
+                least_bit = bitwise_and(V$y, 1)
+                V$x = shr(V$y, 1)
                 V$15 = least_bit
             elif n == 7 do
                 val = V$y - V$x
+                borrow = 1
                 if val < 0 do
-                    V$15 = 0
-                else do
-                    V$15 = 1
+                    borrow = 0
                 done
                 V$x = (val + 256) % 256
+                V$15 = borrow
             elif n == 14 do
-                most_bit = bitwise_and(shr(V$x, 7), 1)
-                V$x = bitwise_and(shl(V$x, 1), 255)
+                most_bit = bitwise_and(shr(V$y, 7), 1)
+                V$x = bitwise_and(shl(V$y, 1), 255)
                 V$15 = most_bit
             done
             
@@ -315,10 +326,12 @@ result = "\\n".join(output_list)
                 for reg_idx = 0 to x do
                     memory$(I + reg_idx) = V$reg_idx
                 done
+                I += x + 1
             elif nn == 101 do
                 for reg_idx = 0 to x do
                     V$reg_idx = memory$(I + reg_idx)
                 done
+                I += x + 1
             done
         done
 

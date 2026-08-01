@@ -5579,7 +5579,11 @@ class Interpreter:
                 else:
                     elements.append(value)
 
-        context.symbol_table.remove(var_name)
+        try:
+            context.symbol_table.remove(var_name)
+        except KeyError:
+            pass
+
 
         if node.should_return_none:
             return res.success(Number.none)
@@ -5903,8 +5907,11 @@ class Interpreter:
         except StopIteration:
             pass
 
-        for name in loop_var:
-            context.symbol_table.remove(name)
+        try:
+            for name in loop_var:
+                context.symbol_table.remove(name)
+        except KeyError:
+            pass
 
         if should_return_none:
             return res.success(Number.none)
