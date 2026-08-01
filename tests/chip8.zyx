@@ -1,0 +1,372 @@
+# https://github.com/memeviber/Zerionyx-CHIP8
+
+load "std.filesys"
+load "std.string"
+load "std.time"
+load "std.sys"
+load "std.keyboard"
+load "std.collections"
+load "std.random"
+load "std.threading"
+
+
+memory = [0] * 4096
+V = [0] * 16
+I = 0
+PC = 512
+SP = 0
+stack = []
+
+delay_timer = 0
+sound_timer = 0
+
+display = []
+keys = [false] * 16
+
+key_map = [
+    "x", "1", "2", "3",
+    "q", "w", "e", "a",
+    "s", "d", "z", "c",
+    "4", "r", "f", "v"
+]
+
+font_set = [
+    240, 144, 144, 144,
+    240, 32, 96, 32,
+    32, 112, 240, 16,
+    240, 128, 240, 240,
+    16, 240, 16, 240,
+    144, 144, 240, 16,
+    16, 240, 128, 240,
+    16, 240, 240, 128,
+    240, 144, 240, 240,
+    16, 32, 64, 64,
+    240, 144, 240, 144,
+    240, 240, 144, 240,
+    16, 240, 240, 144,
+    240, 144, 144, 224,
+    144, 224, 144, 224,
+    240, 80, 80, 80,
+    240, 224, 144, 144,
+    144, 224, 240, 128,
+    240, 128, 240, 240,
+    128, 240, 128, 128
+]
+
+draw_flag = false
+running = true
+
+
+namespace chip8
+    defun init_display()
+        using display, draw_flag
+        display = []
+        for r = 0 until 32 do
+            append(display, [0] * 64)
+        done
+        draw_flag = true
+        return none
+    done
+
+    defun load_font_set()
+        using memory
+        for i = 0 until len(font_set) do
+            memory$i = font_set$i
+        done
+        return none
+    done
+
+    defun update_keys()
+        using keys, key_map, running
+        if keyboard.is_pressed("esc") do running = false
+        for i = 0 until 16 do
+            keys$i = keyboard.is_pressed(key_map$i)
+        done
+        return none
+    done
+
+    defun update_timers()
+        using sound_timer, delay_timer
+        if sound_timer > 0 do
+            print(string.chr(7))
+            sound_timer = 0
+        done
+        if delay_timer > 0 do
+            delay_timer -= 1
+        done
+        return none
+    done
+
+    defun load_rom(rom_path)
+        using memory
+        if not filesys.exists(rom_path) do
+            panic("ROM file not found: " + rom_path, "IO")
+        done
+        raw_bytes = filesys.read(rom_path, "rb")
+        for i = 0 until len(raw_bytes) do
+            memory$(512 + i) = raw_bytes$i
+        done
+        println("Successfully loaded ROM: " + filesys.base_name(rom_path) + " (" + to_str(len(raw_bytes)) + " bytes)")
+        println("Warning: Avoid holding keys to prevent buffer lag")
+        println("Press ESC to exit")
+        time.sleep(3.5)
+        return none
+    done
+
+    defun draw(vx, vy, h)
+        using memory, display, I, draw_flag
+        collision = false
+        sprite = slice(memory, I, I + h, none)
+        for i = 0 until h do
+            byte_val = sprite$i
+            for j = 0 until 8 do
+                bit = bitwise_and(shr(byte_val, 7 - j), 1)
+                target_y = (vy + i) % 32
+                target_x = (vx + j) % 64
+                current_pixel = display$target_y$target_x
+                if current_pixel == 1 and bit == 1 do
+                    collision = true
+                done
+                display$target_y$target_x = bitwise_xor(current_pixel, bit)
+            done
+        done
+        draw_flag = true
+        return collision
+    done
+
+    defun render()
+        using display, draw_flag
+        
+        res = pyexec("""
+display_list = display
+output_list = []
+for row in display_list:
+    row_str = "".join("█" if pixel == 1 else " " for pixel in row)
+    output_list.append(row_str)
+result = "\\n".join(output_list)
+""", {"display": display})
+
+        print("\033[H" + res$"result")
+        
+        draw_flag = false
+        return none
+    done
+
+    defun step_cycle()
+        using memory, PC, V, I, SP, stack, delay_timer, sound_timer, keys
+        
+        b1 = memory$PC
+        b2 = memory$(PC + 1)
+        opcode = bitwise_or(shl(b1, 8), b2)
+        
+        nibble_1 = bitwise_and(shr(opcode, 12), 15)
+        x = bitwise_and(shr(opcode, 8), 15)
+        y = bitwise_and(shr(opcode, 4), 15)
+        n = bitwise_and(opcode, 15)
+        nn = bitwise_and(opcode, 255)
+        nnn = bitwise_and(opcode, 4095)
+
+        if nibble_1 == 0 do
+            if opcode == 224 do
+                init_display()
+            elif opcode == 238 do
+                PC = pop(stack, len(stack) - 1)
+                return none
+            done
+        
+        elif nibble_1 == 1 do
+            PC = nnn
+            return none
+        
+        elif nibble_1 == 2 do
+            append(stack, PC + 2)
+            PC = nnn
+            return none
+        
+        elif nibble_1 == 3 do
+            if V$x == nn do
+                PC += 2
+            done
+            
+        elif nibble_1 == 4 do
+            if V$x != nn do
+                PC += 2
+            done
+            
+        elif nibble_1 == 5 do
+            if V$x == V$y do
+                PC += 2
+            done
+            
+        elif nibble_1 == 6 do
+            V$x = nn
+            
+        elif nibble_1 == 7 do
+            V$x = (V$x + nn) % 256
+            
+        elif nibble_1 == 8 do
+            if n == 0 do
+                V$x = V$y
+            elif n == 1 do
+                V$x = bitwise_or(V$x, V$y)
+            elif n == 2 do
+                V$x = bitwise_and(V$x, V$y)
+            elif n == 3 do
+                V$x = bitwise_xor(V$x, V$y)
+            elif n == 4 do
+                val = V$x + V$y
+                V$x = val % 256
+                if val > 255 do
+                    V$15 = 1
+                else do
+                    V$15 = 0
+                done
+            elif n == 5 do
+                val = V$x - V$y
+                if val < 0 do
+                    V$15 = 0
+                else do
+                    V$15 = 1
+                done
+                V$x = (val + 256) % 256
+            elif n == 6 do
+                least_bit = bitwise_and(V$x, 1)
+                V$x = shr(V$x, 1)
+                V$15 = least_bit
+            elif n == 7 do
+                val = V$y - V$x
+                if val < 0 do
+                    V$15 = 0
+                else do
+                    V$15 = 1
+                done
+                V$x = (val + 256) % 256
+            elif n == 14 do
+                most_bit = bitwise_and(shr(V$x, 7), 1)
+                V$x = bitwise_and(shl(V$x, 1), 255)
+                V$15 = most_bit
+            done
+            
+        elif nibble_1 == 9 do
+            if V$x != V$y do
+                PC += 2
+            done
+            
+        elif nibble_1 == 10 do
+            I = nnn
+            
+        elif nibble_1 == 11 do
+            PC = V$0 + nnn
+            return none
+            
+        elif nibble_1 == 12 do
+            V$x = bitwise_and(random.rand_int(0, 255), nn)
+            
+        elif nibble_1 == 13 do
+            collision = draw(V$x, V$y, n)
+            if collision do
+                V$15 = 1
+            else do
+                V$15 = 0
+            done
+            
+        elif nibble_1 == 14 do
+            if nn == 158 do
+                key = V$x
+                if keys$key do
+                    PC += 2
+                done
+            elif nn == 161 do
+                key = V$x
+                if not keys$key do
+                    PC += 2
+                done
+            done
+            
+        elif nibble_1 == 15 do
+            if nn == 7 do
+                V$x = delay_timer
+            elif nn == 10 do
+                key = none
+                while is_none(key) do
+                    update_keys()
+                    for k = 0 until 16 do
+                        if keys$k do
+                            key = k
+                            break
+                        done
+                    done
+                done
+                V$x = key
+            elif nn == 21 do
+                delay_timer = V$x
+            elif nn == 24 do
+                sound_timer = V$x
+            elif nn == 30 do
+                I += V$x
+            elif nn == 41 do
+                I = V$x * 5
+            elif nn == 51 do
+                val = V$x
+                memory$I = val // 100
+                memory$(I + 1) = (val // 10) % 10
+                memory$(I + 2) = val % 10
+            elif nn == 85 do
+                for reg_idx = 0 to x do
+                    memory$(I + reg_idx) = V$reg_idx
+                done
+            elif nn == 101 do
+                for reg_idx = 0 to x do
+                    V$reg_idx = memory$(I + reg_idx)
+                done
+            done
+        done
+
+        PC += 2
+        return none
+    done
+done
+
+
+defun keyboard_worker()
+    while running do
+        chip8.update_keys()
+    done
+    return none
+done
+
+
+defun main()
+    if len(sys.argv) < 2 do
+        println("Usage: " + sys.argv$0 + " <chip8-rom-file>")
+        sys.exit(1)
+    done
+    
+    rom_path = sys.argv$1
+    
+    clear()
+    threading.start(keyboard_worker)
+    chip8.init_display()
+    chip8.load_font_set()
+    chip8.load_rom(rom_path)
+
+    while running do
+        chip8.update_timers()
+        
+        for _ until 10 do
+            chip8.step_cycle()
+        done
+        
+        if draw_flag do
+            chip8.render()
+        done
+        
+        time.sleep(0.0025)
+    done
+    clear()
+done
+
+
+if is_main do
+    main()
+done
