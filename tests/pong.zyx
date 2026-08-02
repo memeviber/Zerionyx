@@ -1,0 +1,213 @@
+load "std.keyboard"
+load "std.time"
+load "std.sys"
+load "std.collections"
+load "std.string"
+load "std.random"
+
+WIDTH = 50
+HEIGHT = 15
+
+ball_x = 25
+ball_y = 7
+ball_dx = 1
+ball_dy = 1
+
+pad1_y = 6
+pad2_y = 6
+
+score1 = 0
+score2 = 0
+
+running = true
+
+bot_target_y = 6
+bot_calculated = false
+
+
+namespace pong
+    defun move_player()
+        using pad1_y, HEIGHT
+        
+        if keyboard.is_pressed("w") do
+            if pad1_y > 1 do
+                pad1_y -= 1
+            done
+        done
+        if keyboard.is_pressed("s") do
+            if pad1_y < (HEIGHT - 4) do
+                pad1_y += 1
+            done
+        done
+        return none
+    done
+
+    defun calculate_bot_target()
+        using ball_x, ball_y, ball_dx, ball_dy, WIDTH, HEIGHT, bot_target_y, bot_calculated
+        
+        if ball_dx > 0 do
+            if not bot_calculated do
+                temp_x = ball_x
+                temp_y = ball_y
+                temp_dy = ball_dy
+                
+                target_x = WIDTH - 3
+                
+                while temp_x < target_x do
+                    temp_x += 1
+                    temp_y += temp_dy
+                    if temp_y <= 1 or temp_y >= (HEIGHT - 2) do
+                        temp_dy = -temp_dy
+                    done
+                done
+                
+                error = 0
+                if random.rand_int(0, 2) do
+                    error = random.rand_int(-2, 2)
+                done
+                
+                bot_target_y = temp_y - 1 + error
+                
+                if bot_target_y < 1 do
+                    bot_target_y = 1
+                done
+                if bot_target_y > (HEIGHT - 4) do
+                    bot_target_y = HEIGHT - 4
+                done
+                
+                bot_calculated = true
+            done
+        else do
+            bot_calculated = false
+            bot_target_y = (HEIGHT - 3) // 2
+        done
+        return none
+    done
+
+    defun move_bot()
+        using pad2_y, bot_target_y, HEIGHT
+        
+        if pad2_y < bot_target_y do
+            pad2_y += 1
+        elif pad2_y > bot_target_y do
+            pad2_y -= 1
+        done
+        return none
+    done
+
+    defun update_ball()
+        using ball_x, ball_y, ball_dx, ball_dy, pad1_y, pad2_y, score1, score2, WIDTH, HEIGHT
+        
+        ball_x += ball_dx
+        ball_y += ball_dy
+
+        if ball_y <= 1 or ball_y >= (HEIGHT - 2) do
+            ball_dy = -ball_dy
+        done
+
+        if ball_x == 2 do
+            if ball_y >= pad1_y and ball_y <= (pad1_y + 2) do
+                ball_dx = -ball_dx
+            done
+        done
+
+        if ball_x == (WIDTH - 3) do
+            if ball_y >= pad2_y and ball_y <= (pad2_y + 2) do
+                ball_dx = -ball_dx
+            done
+        done
+
+        if ball_x >= (WIDTH - 1) do
+            score1 += 1
+            ball_x = 25
+            ball_y = 7
+            ball_dx = -1
+        done
+
+        if ball_x <= 0 do
+            score2 += 1
+            ball_x = 25
+            ball_y = 7
+            ball_dx = 1
+        done
+        return none
+    done
+
+    defun draw_screen()
+        using ball_x, ball_y, pad1_y, pad2_y, score1, score2, WIDTH, HEIGHT
+        
+        res = pyexec("""
+w, h = width, height
+bx, by = int(ball_x), int(ball_y)
+p1, p2 = int(pad1_y), int(pad2_y)
+
+lines = []
+
+# Tường trên
+lines.append("█" * w)
+
+for y in range(1, h - 1):
+    row = []
+    for x in range(w):
+        if x == 0 or x == w - 1:
+            row.append("█")
+        elif x == bx and y == by:
+            row.append("O")
+        elif x == 2 and y >= p1 and y <= p1 + 2:
+            row.append("█")
+        elif x == w - 3 and y >= p2 and y <= p2 + 2:
+            row.append("█")
+        else:
+            row.append(" ")
+    lines.append("".join(row))
+    
+lines.append("█" * w)
+
+score_str = f"   PLAYER (W/S): {score1}   |   BOT: {score2}   "
+padding = (w - len(score_str)) // 2
+header = " " * padding + score_str
+
+result = header + "\\n" + "\\n".join(lines) + "\\nPress ESC to exit"
+""", {
+            "width": WIDTH,
+            "height": HEIGHT,
+            "ball_x": ball_x,
+            "ball_y": ball_y,
+            "pad1_y": pad1_y,
+            "pad2_y": pad2_y,
+            "score1": score1,
+            "score2": score2
+        })
+        
+        print("\033[H" + res$"result")
+        return none
+    done
+done
+
+
+defun main()
+    using running
+    clear()
+    
+    while running do
+        if keyboard.is_pressed("esc") do
+            running = false
+        done
+        
+        pong.move_player()
+        pong.calculate_bot_target()
+        pong.move_bot()
+        pong.update_ball()
+        pong.draw_screen()
+        
+        time.sleep(0.05)
+    done
+    
+    clear()
+    println("Thanks for playing Zerionyx Pong!")
+done
+
+
+if is_main do
+    main()
+done

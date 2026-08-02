@@ -4869,6 +4869,73 @@ class BuiltInFunction(BaseFunction):
                 )
             )
 
+    @set_args(["value", "supress_error"], [None, Number.false])
+    def execute_to_bool(self, exec_ctx):
+        value = exec_ctx.symbol_table.get("value")
+        supress_error = exec_ctx.symbol_table.get("supress_error")
+        if not isinstance(supress_error, Bool):
+            return RTResult().failure(
+                TError(
+                    self.pos_start,
+                    self.pos_end,
+                    "Second argument of 'to_bool' must be a boolean",
+                    exec_ctx,
+                )
+            )
+        if int(supress_error.value) == 1:
+            supress_error_ = True
+        elif int(supress_error.value) == 0:
+            supress_error_ = False
+        else:
+            return RTResult().failure(
+                TError(
+                    self.pos_start,
+                    self.pos_end,
+                    "Second argument of 'to_bool' must be a boolean",
+                    exec_ctx,
+                )
+            )
+        if isinstance(value, Bool):
+            return RTResult().success(value)
+        elif isinstance(value, Number):
+            return RTResult().success(Number.true if value.value != 0 else Number.false)
+        elif isinstance(value, CFloat):
+            return RTResult().success(Number.true if value.value != 0 else Number.false)
+        elif isinstance(value, String):
+            val_str = value.value.strip().lower()
+            if val_str in ("true", "1"):
+                return RTResult().success(Number.true)
+            elif val_str in ("false", "0", ""):
+                return RTResult().success(Number.false)
+            else:
+                if supress_error_:
+                    return RTResult().success(Number.none)
+                else:
+                    return RTResult().failure(
+                        RTError(
+                            self.pos_start,
+                            self.pos_end,
+                            f"Failed to convert '{value.value}' of type '{value.type()}' to boolean",
+                            exec_ctx,
+                        )
+                    )
+        elif isinstance(value, NoneObject):
+            return RTResult().success(Number.false)
+        elif isinstance(value, (List, HashMap, Bytes)):
+            return RTResult().success(Number.true if len(value.value) > 0 else Number.false)
+        else:
+            if supress_error_:
+                return RTResult().success(Number.none)
+            else:
+                return RTResult().failure(
+                    TError(
+                        self.pos_start,
+                        self.pos_end,
+                        f"Failed to convert value of type '{value.type()}' to boolean",
+                        exec_ctx,
+                    )
+                )
+
 
 for method_name in [m for m in dir(BuiltInFunction) if m.startswith("execute_")]:
     func_name = method_name[8:]

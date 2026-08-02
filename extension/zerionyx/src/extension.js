@@ -24,7 +24,7 @@ const zerionyxBuiltins = [
     'insert', 'extend', 'slice', 'to_str', 'to_int', 'to_float', 'to_cfloat',
     'to_bytes', 'pyexec', 'clone', 'keys', 'values', 'items', 'has', 'get',
     'del_key', 'get_member', 'shl', 'shr', 'bitwise_and', 'bitwise_or',
-    'bitwise_xor', 'bitwise_not'
+    'bitwise_xor', 'bitwise_not', 'to_bool'
 ];
 
 const libraryFunctions = {

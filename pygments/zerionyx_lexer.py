@@ -93,6 +93,7 @@ class ZerionyxLexer(RegexLexer):
         "bitwise_or",
         "bitwise_xor",
         "bitwise_not",
+        "to_bool",
     )
 
     zyx_types = (

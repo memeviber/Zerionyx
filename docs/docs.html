@@ -387,6 +387,11 @@ KWARGS_PARAM ::= <span class="zyx-string">**</span> IDENTIFIER
                             to bytes return
                             <code>none</code> if fail and <code>supress_error</code> true else raise
                         </li>
+                        <li><b>to_bool(x, suppress_error=false)</b> &rarr; bool/none &mdash; Convert
+                            <code>x</code> to boolean, return
+                            <code>none</code> if conversion fails and <code>suppress_error</code> is true, otherwise
+                            raise an error.
+                        </li>
                         <li><b>type(x)</b> &rarr; str &mdash; Return type of <code>x</code> as string</li>
                         <li><b>pyexec(code, env={})</b> &rarr; hashmap &mdash; Executes embedded Python code and
                             returns
@@ -943,9 +948,11 @@ that spans across multiple lines."""</span></code></pre>
                         <li><b>any(f, l)</b> &rarr; bool &mdash; Return <code>true</code> if at least one element in
                             list <code>l</code> matches the predicate function <code>f</code></li>
                         <li><b>all(f, l)</b> &rarr; bool &mdash; Return <code>true</code> only if all elements in list
-                            <code>l</code> match the predicate function <code>f</code></li>
+                            <code>l</code> match the predicate function <code>f</code>
+                        </li>
                         <li><b>find(f, l)</b> &rarr; any/none &mdash; Find and return the first element in list
-                            <code>l</code> that matches the predicate function <code>f</code></li>
+                            <code>l</code> that matches the predicate function <code>f</code>
+                        </li>
                         <li><b>unique(l)</b> &rarr; list &mdash; Return a new list containing only unique elements from
                             list <code>l</code></li>
                         <li><b>merge(h1, h2)</b> &rarr; hashmap &mdash; Merge two hashmaps together and return a new
