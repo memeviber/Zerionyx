@@ -10,7 +10,7 @@ load "std.random"
 load "std.threading"
 
 
-memory = [0] * 4096
+memory = [0] * 4096 * 160
 V = [0] * 16
 I = 0
 PC = 512
@@ -509,7 +509,7 @@ defun main()
     while running do
         chip8.update_timers()
         
-        for _ until 10 do
+        for _ until 30 do
             chip8.step_cycle()
         done
         
@@ -517,7 +517,7 @@ defun main()
             chip8.render()
         done
         
-        time.sleep(0.0025)
+        time.sleep(0.00083)
     done
     clear()
 done
